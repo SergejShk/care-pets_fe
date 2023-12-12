@@ -1,0 +1,53 @@
+/* Manrope-400 */
+@font-face {
+    font-family: 'Manrope'; 
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('./Manrope/Manrope-Regular.ttf');
+}
+
+/* Manrope-500 */
+@font-face {
+    font-family: 'Manrope'; 
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('./Manrope/Manrope-Medium.ttf');
+}
+
+/* Manrope-600 */
+@font-face {
+    font-family: 'Manrope'; 
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('./Manrope/Manrope-SemiBold.ttf');
+}
+
+/* Manrope-700 */
+@font-face {
+    font-family: 'Manrope'; 
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('./Manrope/Manrope-Bold.ttf');
+}
+
+/* Poppins-400 */
+@font-face {
+    font-family: 'Poppins'; 
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('./Poppins/Poppins-Regular.ttf');
+}
+
+/* Poppins-700 */
+@font-face {
+    font-family: 'Poppins'; 
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('./Poppins/Poppins-Bold.ttf');
+}

@@ -1,5 +1,9 @@
-const App = () => {
-  return <h1>Vite + React</h1>
-}
+import { FC } from "react";
 
-export default App
+import Header from "./Header";
+
+const App: FC = () => {
+	return <Header />;
+};
+
+export default App;
