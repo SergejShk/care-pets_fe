@@ -13,12 +13,12 @@ export default Logo;
 const LogoStyled = styled.div`
 	display: flex;
 	align-items: center;
-	color: #111;
+	color: ${({ theme }) => theme.textColor.black};
 	font-family: Poppins;
 	font-size: 32px;
 	font-weight: 700;
 `;
 
 const AccentedLetter = styled.span`
-	color: #f59256;
+	color: ${({ theme }) => theme.textColor.primary};
 `;
