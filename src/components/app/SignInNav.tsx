@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Button from "../common/Button";
 
 import { ButtonTheme } from "../../interface/styles";
+import { Link } from "react-router-dom";
 
 interface IProps {
 	isMobile?: boolean;
@@ -15,10 +16,15 @@ const SignInNav: FC<IProps> = ({ isMobile }) => {
 
 	return (
 		<SignInNavStyled isMobile={isMobile}>
-			<Button fontSize={btnFontSize}>Login</Button>
-			<Button btntheme={ButtonTheme.Orange} fontSize={btnFontSize}>
-				Registration
-			</Button>
+			<Link to="/login">
+				<Button fontSize={btnFontSize}>Login</Button>
+			</Link>
+
+			<Link to="/registration">
+				<Button btntheme={ButtonTheme.Orange} fontSize={btnFontSize}>
+					Registration
+				</Button>
+			</Link>
 		</SignInNavStyled>
 	);
 };

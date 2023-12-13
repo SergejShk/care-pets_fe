@@ -1,12 +1,19 @@
-import { FC, ReactNode } from "react";
+import { FC, Suspense } from "react";
+import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
-interface IProps {
-	children: ReactNode;
-}
+import Header from "../app/Header";
 
-const SharedLayout: FC<IProps> = ({ children }) => {
-	return <LayoutStyled>{children}</LayoutStyled>;
+const SharedLayout: FC = () => {
+	return (
+		<LayoutStyled>
+			<Header />
+
+			<Suspense>
+				<Outlet />
+			</Suspense>
+		</LayoutStyled>
+	);
 };
 
 export default SharedLayout;
@@ -16,12 +23,4 @@ const LayoutStyled = styled.div`
 	height: 100vh;
 	margin: 0 auto;
 	background-color: ${({ theme }) => theme.backgroundColor.main};
-	/* padding: 0 20px;
-
-	@media screen and (min-width: 768px) {
-		padding: 0 32px;
-	}
-	@media screen and (min-width: 1280px) {
-		padding: 0 16px;
-	} */
 `;

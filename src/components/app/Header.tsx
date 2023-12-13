@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import Logo from "./Logo";
 import SignInNav from "./SignInNav";
-import Navigation from "./Navigation";
+import Navigation from "../common/Navigation";
 
 import Burger from "../common/icons/Burger";
 

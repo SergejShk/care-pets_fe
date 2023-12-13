@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
 
-const Home: FC = () => {
+const HomePage: FC = () => {
 	return (
 		<HomeStyled>
 			<HomeText>Take good care of your small pets</HomeText>
@@ -12,7 +12,7 @@ const Home: FC = () => {
 	);
 };
 
-export default Home;
+export default HomePage;
 
 const HomeStyled = styled.div`
 	width: 100%;
