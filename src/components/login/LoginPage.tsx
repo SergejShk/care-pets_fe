@@ -8,7 +8,9 @@ const LoginPage = () => {
 
 	return (
 		<LoginStyled>
-			<Title>Login{!isDesktop && <MobileMenu />}</Title>
+			<Title>Login</Title>
+
+			{!isDesktop && <MobileMenu />}
 		</LoginStyled>
 	);
 };

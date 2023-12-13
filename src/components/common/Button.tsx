@@ -1,18 +1,19 @@
-import { ButtonHTMLAttributes, FC, ReactNode } from "react";
+import { ButtonHTMLAttributes, CSSProperties, FC, ReactNode } from "react";
 import styled from "styled-components";
 
 import { ButtonTheme } from "../../interface/styles";
 
 type IProps = {
 	children: ReactNode;
+	style?: CSSProperties;
 	btntheme?: ButtonTheme;
 	fontSize?: string;
 	padding?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const Button: FC<IProps> = ({ children, btntheme = ButtonTheme.White, padding, fontSize }) => {
+const Button: FC<IProps> = ({ children, btntheme = ButtonTheme.White, padding, fontSize, style }) => {
 	return (
-		<ButtonStyled btntheme={btntheme} padding={padding} fontSize={fontSize}>
+		<ButtonStyled btntheme={btntheme} padding={padding} fontSize={fontSize} style={style}>
 			{children}
 		</ButtonStyled>
 	);
