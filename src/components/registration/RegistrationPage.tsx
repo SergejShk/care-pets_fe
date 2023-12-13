@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import MobileMenu from "../mobile-menu/MobileMenu";
 import FirstStepRegistration from "./FirstStepRegistration";
+import SecondStepRegistration from "./SecondStepRegistration";
 
 import { IFirstStepRegistration } from "../../interface/registration";
 
@@ -19,6 +20,7 @@ const RegistrationPage = () => {
 				<Title>Registration</Title>
 
 				{!dataFirstStep && <FirstStepRegistration setDataFirstStep={setDataFirstStep} />}
+				{dataFirstStep && <SecondStepRegistration firstStepValues={dataFirstStep} />}
 
 				<AdditionalText>
 					Already have an account? <LinkStyled to="/login">Login</LinkStyled>

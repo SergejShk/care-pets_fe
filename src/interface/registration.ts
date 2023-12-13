@@ -6,3 +6,9 @@ export interface IFirstStepRegistration {
 export interface FirstStepRegistrationFormValues extends IFirstStepRegistration {
 	confirmPassword: string;
 }
+
+export interface SecondStepRegistrationFormValues {
+	name: string;
+	city: string;
+	phone: string;
+}

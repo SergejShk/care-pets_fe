@@ -40,12 +40,17 @@ const FirstStepRegistration: FC<IProps> = ({ setDataFirstStep }) => {
 	return (
 		<FormStyled className="form" onSubmit={handleSubmit(onSubmit)}>
 			<Input
-				type="email"
+				type="text"
 				name="email"
 				placeholder="Email"
 				register={register}
 				rules={{
 					required: { value: true, message: "Required" },
+					pattern: {
+						value:
+							/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+						message: "Please enter a valid email",
+					},
 				}}
 				error={errors.email}
 			/>
@@ -57,6 +62,8 @@ const FirstStepRegistration: FC<IProps> = ({ setDataFirstStep }) => {
 				register={register}
 				rules={{
 					required: { value: true, message: "Required" },
+					minLength: { value: 7, message: "Min length 7 characters" },
+					maxLength: { value: 32, message: "Max length 32 characters" },
 				}}
 				error={errors.password}
 			/>
@@ -68,6 +75,8 @@ const FirstStepRegistration: FC<IProps> = ({ setDataFirstStep }) => {
 				register={register}
 				rules={{
 					required: { value: true, message: "Required" },
+					minLength: { value: 7, message: "Min length 7 characters" },
+					maxLength: { value: 32, message: "Max length 32 characters" },
 				}}
 				error={errors.confirmPassword}
 			/>
