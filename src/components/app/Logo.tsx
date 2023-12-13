@@ -1,9 +1,17 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import { useModalContext } from "../../context/ModalProvider";
+
 const Logo = () => {
+	const { setModal } = useModalContext();
+
+	const onLinkClick = () => {
+		setModal((prev) => ({ ...prev, isMobileMenuOpen: false }));
+	};
+
 	return (
-		<LogoStyled to="/">
+		<LogoStyled to="/" onClick={onLinkClick}>
 			pe<AccentedLetter>t</AccentedLetter>ly
 		</LogoStyled>
 	);
