@@ -3,13 +3,16 @@ import styled from "styled-components";
 
 import SignInNav from "../common/SignInNav";
 import Navigation from "../common/Navigation";
+import { useModalContext } from "../../context/ModalProvider";
 
 const MobileMenu = () => {
-	const isMenuOpen = false;
 	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+	const {
+		modal: { isMobileMenuOpen },
+	} = useModalContext();
 
 	return (
-		<MobileMenuStyled className={isMenuOpen ? "isOpen" : ""}>
+		<MobileMenuStyled className={isMobileMenuOpen ? "isOpen" : ""}>
 			{isMobile && <SignInNav />}
 			<Navigation />
 		</MobileMenuStyled>
@@ -32,7 +35,7 @@ const MobileMenuStyled = styled.div`
 	height: calc(100% - 46px);
 	margin: 0 auto;
 	padding: 46px 20px 0;
-	transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+	transition: transform 800ms cubic-bezier(0.4, 0, 0.2, 1);
 
 	&.isOpen {
 		transform: translateX(-50%) translateY(0%);

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import MobileMenu from "../mobile-menu/MobileMenu";
 
 const HomePage: FC = () => {
-	const isDesktop = useMediaQuery({ query: "(min-width: 1279px)" });
+	const isDesktop = useMediaQuery({ query: "(min-width: 1280px)" });
 
 	return (
 		<HomeStyled>

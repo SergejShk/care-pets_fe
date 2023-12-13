@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
+import { useModalContext } from "../../context/ModalProvider";
+
 const navItems = [
 	{ name: "News", to: "/news" },
 	{ name: "Find pet", to: "/find-pet" },
@@ -8,10 +10,16 @@ const navItems = [
 ];
 
 const Navigation = () => {
+	const { setModal } = useModalContext();
+
+	const onLinkClick = () => {
+		setModal((prev) => ({ ...prev, isMobileMenuOpen: false }));
+	};
+
 	return (
 		<NavigationStyled>
 			{navItems.map((item) => (
-				<li key={item.to}>
+				<li key={item.to} onClick={onLinkClick}>
 					<NavLinkStyled to={item.to}>{item.name}</NavLinkStyled>
 				</li>
 			))}

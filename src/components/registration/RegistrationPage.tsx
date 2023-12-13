@@ -1,9 +1,14 @@
+import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 
+import MobileMenu from "../mobile-menu/MobileMenu";
+
 const RegistrationPage = () => {
+	const isDesktop = useMediaQuery({ query: "(min-width: 1280px)" });
+
 	return (
 		<RegistrationStyled>
-			<Title>Registration</Title>
+			<Title>Registration{!isDesktop && <MobileMenu />}</Title>
 		</RegistrationStyled>
 	);
 };
@@ -11,9 +16,12 @@ const RegistrationPage = () => {
 export default RegistrationPage;
 
 const RegistrationStyled = styled.div`
+	position: relative;
 	max-width: 320px;
+	min-height: calc(100vh - 60px);
 	margin: 0 auto;
 	padding: 0 20px;
+	overflow: hidden;
 
 	@media screen and (min-width: 768px) {
 		max-width: 768px;

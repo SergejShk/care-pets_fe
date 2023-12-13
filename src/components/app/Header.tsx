@@ -6,10 +6,17 @@ import SignInNav from "../common/SignInNav";
 import Navigation from "../common/Navigation";
 
 import Burger from "../common/icons/Burger";
+import { useModalContext } from "../../context/ModalProvider";
 
 const Header = () => {
 	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
-	const isDesktop = useMediaQuery({ query: "(min-width: 1279px)" });
+	const isDesktop = useMediaQuery({ query: "(min-width: 1280px)" });
+
+	const { setModal } = useModalContext();
+
+	const onBurgerClick = () => {
+		setModal((prev) => ({ ...prev, isMobileMenuOpen: !prev.isMobileMenuOpen }));
+	};
 
 	return (
 		<HeaderStyled>
@@ -21,7 +28,7 @@ const Header = () => {
 			<MenuWrapper>
 				{!isMobile && <SignInNav />}
 
-				<BurgerWrapper>
+				<BurgerWrapper onClick={onBurgerClick}>
 					<Burger />
 				</BurgerWrapper>
 			</MenuWrapper>

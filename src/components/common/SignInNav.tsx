@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 
+import { useModalContext } from "../../context/ModalProvider";
+
 import Button from "./Button";
 
 import { ButtonTheme } from "../../interface/styles";
@@ -11,13 +13,19 @@ const SignInNav: FC = () => {
 	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 	const btnFontSize = isMobile ? "14px" : "20px";
 
+	const { setModal } = useModalContext();
+
+	const onLinkClick = () => {
+		setModal((prev) => ({ ...prev, isMobileMenuOpen: false }));
+	};
+
 	return (
 		<SignInNavStyled>
-			<Link to="/login">
+			<Link to="/login" onClick={onLinkClick}>
 				<Button fontSize={btnFontSize}>Login</Button>
 			</Link>
 
-			<Link to="/registration">
+			<Link to="/registration" onClick={onLinkClick}>
 				<Button btntheme={ButtonTheme.Orange} fontSize={btnFontSize}>
 					Registration
 				</Button>
