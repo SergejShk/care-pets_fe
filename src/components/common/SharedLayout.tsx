@@ -19,8 +19,9 @@ const SharedLayout: FC = () => {
 export default SharedLayout;
 
 const LayoutStyled = styled.div`
+	min-height: 100vh;
 	position: relative;
-	height: 100vh;
+	height: 100%;
 	margin: 0 auto;
 	background-color: ${({ theme }) => theme.backgroundColor.main};
 `;

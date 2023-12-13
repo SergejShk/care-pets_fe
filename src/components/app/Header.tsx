@@ -1,23 +1,26 @@
+import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 
 import Logo from "./Logo";
-import SignInNav from "./SignInNav";
+import SignInNav from "../common/SignInNav";
 import Navigation from "../common/Navigation";
 
 import Burger from "../common/icons/Burger";
 
 const Header = () => {
-	const screenWidth = window.innerWidth;
+	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+	const isDesktop = useMediaQuery({ query: "(min-width: 1279px)" });
 
 	return (
 		<HeaderStyled>
 			<NavWrapper>
 				<Logo />
-				{screenWidth > 1279 && <Navigation />}
+				{isDesktop && <Navigation />}
 			</NavWrapper>
 
 			<MenuWrapper>
-				<SignInNav />
+				{!isMobile && <SignInNav />}
+
 				<BurgerWrapper>
 					<Burger />
 				</BurgerWrapper>

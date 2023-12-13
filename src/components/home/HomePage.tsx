@@ -1,13 +1,20 @@
 import { FC } from "react";
+import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 
+import MobileMenu from "../mobile-menu/MobileMenu";
+
 const HomePage: FC = () => {
+	const isDesktop = useMediaQuery({ query: "(min-width: 1279px)" });
+
 	return (
 		<HomeStyled>
 			<HomeText>Take good care of your small pets</HomeText>
 			<WomanImg>
 				<WomanHeart />
 			</WomanImg>
+
+			{!isDesktop && <MobileMenu />}
 		</HomeStyled>
 	);
 };
@@ -15,8 +22,9 @@ const HomePage: FC = () => {
 export default HomePage;
 
 const HomeStyled = styled.div`
+	position: relative;
 	width: 100%;
-	min-height: auto;
+	min-height: calc(100vh - 60px);
 	display: flex;
 	justify-content: space-between;
 	flex-direction: column;
@@ -24,6 +32,7 @@ const HomeStyled = styled.div`
 	background-size: auto;
 	background-position: center bottom;
 	background-repeat: no-repeat;
+	overflow: hidden;
 
 	@media screen and (min-width: 768px) {
 		background-image: url("/wave-tab.png");

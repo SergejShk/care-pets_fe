@@ -1,21 +1,18 @@
 import { FC } from "react";
+import { Link } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 
-import Button from "../common/Button";
+import Button from "./Button";
 
 import { ButtonTheme } from "../../interface/styles";
-import { Link } from "react-router-dom";
 
-interface IProps {
-	isMobile?: boolean;
-}
-
-const SignInNav: FC<IProps> = ({ isMobile }) => {
-	const screenWidth = window.innerWidth;
-	const btnFontSize = screenWidth < 768 ? "14px" : "20px";
+const SignInNav: FC = () => {
+	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+	const btnFontSize = isMobile ? "14px" : "20px";
 
 	return (
-		<SignInNavStyled isMobile={isMobile}>
+		<SignInNavStyled>
 			<Link to="/login">
 				<Button fontSize={btnFontSize}>Login</Button>
 			</Link>
@@ -32,12 +29,19 @@ const SignInNav: FC<IProps> = ({ isMobile }) => {
 export default SignInNav;
 
 const SignInNavStyled = styled.div<{ isMobile?: boolean }>`
-	display: ${({ isMobile }) => (isMobile ? "flex" : "none")};
+	max-width: 320px;
+	margin: 0 auto;
+	display: flex;
 	align-items: center;
 	justify-content: center;
 	gap: 12px;
 
 	@media screen and (min-width: 768px) {
-		display: ${({ isMobile }) => (isMobile ? "none" : "flex")};
+		max-width: 768px;
+		padding: 0 32px;
+	}
+	@media screen and (min-width: 1280px) {
+		max-width: 1280px;
+		padding: 0 16px;
 	}
 `;

@@ -1,7 +1,11 @@
 import styled from "styled-components";
 
 const RegistrationPage = () => {
-	return <RegistrationStyled>Registration page</RegistrationStyled>;
+	return (
+		<RegistrationStyled>
+			<Title>Registration</Title>
+		</RegistrationStyled>
+	);
 };
 
 export default RegistrationPage;
@@ -19,4 +23,14 @@ const RegistrationStyled = styled.div`
 		max-width: 1280px;
 		padding: 0 16px;
 	}
+`;
+
+const Title = styled.h2`
+	display: block;
+	font-size: 24px;
+	font-weight: 700;
+	line-height: normal;
+	letter-spacing: 0.96px;
+	margin: 42px 0 40px;
+	text-align: center;
 `;
