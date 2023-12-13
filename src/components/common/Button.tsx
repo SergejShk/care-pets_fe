@@ -22,6 +22,7 @@ const Button: FC<IProps> = ({ children, btntheme = ButtonTheme.White, padding, f
 export default Button;
 
 const ButtonStyled = styled.button<{ btntheme: ButtonTheme; padding?: string; fontSize?: string }>`
+	position: relative;
 	cursor: pointer;
 	display: flex;
 	align-items: center;

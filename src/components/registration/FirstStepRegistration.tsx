@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Input from "../common/Input";
 import Button from "../common/Button";
 
-import { FirstStepRegistrationFormValues, IFirstStepRegistration } from "../../interface/registration";
+import { IFirstStepRegistrationFormValues, IFirstStepRegistration } from "../../interface/registration";
 import { ButtonTheme } from "../../interface/styles";
 
 interface IProps {
@@ -18,7 +18,7 @@ const FirstStepRegistration: FC<IProps> = ({ setDataFirstStep }) => {
 		handleSubmit,
 		setError,
 		formState: { errors },
-	} = useForm<FirstStepRegistrationFormValues>({
+	} = useForm<IFirstStepRegistrationFormValues>({
 		defaultValues: {
 			email: "",
 			password: "",
@@ -26,7 +26,7 @@ const FirstStepRegistration: FC<IProps> = ({ setDataFirstStep }) => {
 		},
 	});
 
-	const onSubmit = ({ email, password, confirmPassword }: FirstStepRegistrationFormValues) => {
+	const onSubmit = ({ email, password, confirmPassword }: IFirstStepRegistrationFormValues) => {
 		if (password !== confirmPassword) {
 			setError("confirmPassword", {
 				type: "manual",

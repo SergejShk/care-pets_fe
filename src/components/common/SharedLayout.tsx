@@ -3,19 +3,16 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 import Header from "../app/Header";
-import { ModalProvider } from "../../context/ModalProvider";
 
 const SharedLayout: FC = () => {
 	return (
-		<ModalProvider>
-			<LayoutStyled>
-				<Header />
+		<LayoutStyled>
+			<Header />
 
-				<Suspense>
-					<Outlet />
-				</Suspense>
-			</LayoutStyled>
-		</ModalProvider>
+			<Suspense>
+				<Outlet />
+			</Suspense>
+		</LayoutStyled>
 	);
 };
 

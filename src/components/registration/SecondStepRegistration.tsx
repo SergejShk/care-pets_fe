@@ -1,11 +1,14 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
 import Input from "../common/Input";
 import Button from "../common/Button";
 
-import { SecondStepRegistrationFormValues, IFirstStepRegistration } from "../../interface/registration";
+import { useRegistration } from "../../api/mutations/auth/useRegistration";
+
+import { ISecondStepRegistrationFormValues, IFirstStepRegistration } from "../../interface/registration";
 import { ButtonTheme } from "../../interface/styles";
 
 interface IProps {
@@ -13,11 +16,15 @@ interface IProps {
 }
 
 const SecondStepRegistration: FC<IProps> = ({ firstStepValues }) => {
+	const { data, isPending, error, mutate, reset } = useRegistration();
+
+	const navigate = useNavigate();
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<SecondStepRegistrationFormValues>({
+	} = useForm<ISecondStepRegistrationFormValues>({
 		defaultValues: {
 			name: "",
 			city: "",
@@ -25,8 +32,16 @@ const SecondStepRegistration: FC<IProps> = ({ firstStepValues }) => {
 		},
 	});
 
-	const onSubmit = (formValues: SecondStepRegistrationFormValues) => {
-		console.log({ ...firstStepValues, ...formValues });
+	useEffect(() => {
+		if (!data) return;
+
+		reset();
+		navigate("/");
+	}, [data, navigate, reset]);
+
+	const onSubmit = (formValues: ISecondStepRegistrationFormValues) => {
+		const value = { ...firstStepValues, ...formValues };
+		mutate({ body: value });
 	};
 
 	return (
@@ -74,8 +89,9 @@ const SecondStepRegistration: FC<IProps> = ({ firstStepValues }) => {
 				error={errors.phone}
 			/>
 
-			<Button btntheme={ButtonTheme.Orange} style={{ marginTop: "24px" }}>
+			<Button btntheme={ButtonTheme.Orange} style={{ marginTop: "24px" }} disabled={isPending}>
 				Register
+				{!!error && <ErrorMessage>{error.message} </ErrorMessage>}
 			</Button>
 		</FormStyled>
 	);
@@ -87,4 +103,13 @@ const FormStyled = styled.form`
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
+`;
+
+const ErrorMessage = styled.p`
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: -15px;
+	font-size: 10px;
+	color: ${({ theme }) => theme.textColor.error};
 `;

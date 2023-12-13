@@ -3,11 +3,21 @@ export interface IFirstStepRegistration {
 	password: string;
 }
 
-export interface FirstStepRegistrationFormValues extends IFirstStepRegistration {
+export interface IFirstStepRegistrationFormValues extends IFirstStepRegistration {
 	confirmPassword: string;
 }
 
-export interface SecondStepRegistrationFormValues {
+export interface ISecondStepRegistrationFormValues {
+	name: string;
+	city: string;
+	phone: string;
+}
+
+export interface IRegistrationReq extends IFirstStepRegistration, ISecondStepRegistrationFormValues {}
+
+export interface IRegisteredUser {
+	id: string;
+	email: string;
 	name: string;
 	city: string;
 	phone: string;
