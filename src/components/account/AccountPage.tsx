@@ -4,7 +4,6 @@ import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 
 import Heading from "./Heading";
-import LogOutBtn from "./LogOutBtn";
 import ProfileCard from "./ProfileCard";
 import PetsCard from "./PetsCard";
 import MobileMenu from "../mobile-menu/MobileMenu";
@@ -38,7 +37,6 @@ const AccountPage: FC = () => {
 
 			<PetsCard />
 
-			<LogOutBtn />
 			{!isDesktop && <MobileMenu />}
 		</AccountStyled>
 	);

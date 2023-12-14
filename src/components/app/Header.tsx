@@ -64,11 +64,11 @@ const HeaderStyled = styled.div`
 	padding: 12px 20px 0;
 
 	@media screen and (min-width: 768px) {
-		max-width: 768px;
+		max-width: calc(768px - 48px);
 		padding: 24px 32px 0;
 	}
 	@media screen and (min-width: 1280px) {
-		max-width: 1280px;
+		max-width: calc(1280px - 40px);
 		padding: 20px 16px 0;
 	}
 `;
