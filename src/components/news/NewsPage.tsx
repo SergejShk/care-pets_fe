@@ -31,5 +31,6 @@ const NewsStyled = styled.div`
 	@media screen and (min-width: 1280px) {
 		max-width: 1280px;
 		padding: 0 16px;
+		min-height: calc(100vh - 72px);
 	}
 `;

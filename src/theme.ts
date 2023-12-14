@@ -6,6 +6,7 @@ export const theme = {
 		primaryAccent: "#FF6101",
 		error: "#FF474D",
 		blue: "#3091EB",
+		grey: "rgba(17, 17, 17, 0.60)",
 	},
 	backgroundColor: {
 		main: "#FDF7F2",

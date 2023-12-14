@@ -16,16 +16,20 @@ const MobileMenu = () => {
 	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
 	const { auth } = useAuthContext();
-	const { modal } = useModalContext();
+	const { modal, setModal } = useModalContext();
 
 	const isAuth = !!auth.email;
 	const { isMobileMenuOpen } = modal;
 
+	const onAccountClick = () => {
+		setModal((prev) => ({ ...prev, isMobileMenuOpen: false }));
+	};
+
 	return (
 		<MobileMenuStyled className={isMobileMenuOpen ? "isOpen" : ""}>
 			{isMobile && !isAuth && <SignInNav />}
-			{!isMobile && isAuth && (
-				<Link to="/account">
+			{isMobile && isAuth && (
+				<Link to="/account" onClick={onAccountClick}>
 					<Button type="button" btntheme={ButtonTheme.Orange}>
 						<Person />
 						Account
@@ -48,6 +52,7 @@ const MobileMenuStyled = styled.div`
 	z-index: 10;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	padding: 46px 0 0;
 	background-color: ${({ theme }) => theme.backgroundColor.main};
 	width: calc(100% - 40px);

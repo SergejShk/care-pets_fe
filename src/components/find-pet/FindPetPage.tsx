@@ -25,6 +25,7 @@ const FindPetStyled = styled.div`
 	}
 	@media screen and (min-width: 1280px) {
 		max-width: 1280px;
+		min-height: calc(100vh - 72px);
 		padding: 0 16px;
 	}
 `;

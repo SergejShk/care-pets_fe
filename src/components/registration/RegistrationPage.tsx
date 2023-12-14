@@ -53,7 +53,7 @@ const RegistrationStyled = styled.div`
 	}
 	@media screen and (min-width: 1280px) {
 		max-width: 1280px;
-		min-height: calc(100vh - 60px - 54px);
+		min-height: calc(100vh - 64px - 54px);
 		padding: 46px 16px 0;
 		background-image: url("/wave-common-desk.png");
 	}

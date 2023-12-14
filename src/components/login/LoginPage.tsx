@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMediaQuery } from "react-responsive";
@@ -15,7 +15,7 @@ import { useLogin } from "../../api/mutations/auth/useLogin";
 import { ILoginFormValues } from "../../interface/login";
 import { ButtonTheme } from "../../interface/styles";
 
-const LoginPage = () => {
+const LoginPage: FC = () => {
 	const isDesktop = useMediaQuery({ query: "(min-width: 1280px)" });
 	const navigate = useNavigate();
 
@@ -115,7 +115,7 @@ const LoginStyled = styled.div`
 	}
 	@media screen and (min-width: 1280px) {
 		max-width: 1280px;
-		min-height: calc(100vh - 60px - 54px);
+		min-height: calc(100vh - 64px - 54px);
 		padding: 46px 16px 0;
 		background-image: url("/wave-common-desk.png");
 	}

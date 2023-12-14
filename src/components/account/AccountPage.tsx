@@ -1,14 +1,30 @@
+import { FC, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 
+import LogOutBtn from "./LogOutBtn";
 import MobileMenu from "../mobile-menu/MobileMenu";
 
-const AccountPage = () => {
+import { useAuthContext } from "../../context/AuthProvider";
+
+const AccountPage: FC = () => {
 	const isDesktop = useMediaQuery({ query: "(min-width: 1280px)" });
+	const navigate = useNavigate();
+
+	const { auth } = useAuthContext();
+	const isAuth = !!auth.email;
+
+	useEffect(() => {
+		if (!isAuth) {
+			navigate("/");
+		}
+	}, [isAuth, navigate]);
 
 	return (
 		<AccountStyled>
 			Account page
+			<LogOutBtn />
 			{!isDesktop && <MobileMenu />}
 		</AccountStyled>
 	);

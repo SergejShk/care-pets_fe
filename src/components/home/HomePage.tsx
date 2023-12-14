@@ -46,7 +46,7 @@ const HomeStyled = styled.div`
 		justify-content: normal;
 		gap: 52px;
 		margin: 0 auto;
-		min-height: calc(100vh - 70px);
+		min-height: calc(100vh - 72px);
 	}
 `;
 
