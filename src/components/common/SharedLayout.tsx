@@ -1,10 +1,18 @@
-import { FC, Suspense } from "react";
+import { FC, Suspense, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 import Header from "../app/Header";
 
+import { useGetMe } from "../../api/mutations/auth/useGetMe";
+
 const SharedLayout: FC = () => {
+	const { mutate } = useGetMe();
+
+	useEffect(() => {
+		mutate();
+	}, [mutate]);
+
 	return (
 		<LayoutStyled>
 			<Header />
