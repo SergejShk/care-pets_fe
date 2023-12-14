@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import Input from "../common/Input";
 import Button from "../common/Button";
+import ErrorMessage from "../common/ErrorMessage";
 
 import { useRegistration } from "../../api/mutations/auth/useRegistration";
 
@@ -91,7 +92,7 @@ const SecondStepRegistration: FC<IProps> = ({ firstStepValues }) => {
 
 			<Button btntheme={ButtonTheme.Orange} style={{ marginTop: "24px" }} disabled={isPending}>
 				Register
-				{!!error && <ErrorMessage>{error.message} </ErrorMessage>}
+				{!!error && <ErrorMessage message={error.message} />}
 			</Button>
 		</FormStyled>
 	);
@@ -103,13 +104,4 @@ const FormStyled = styled.form`
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-`;
-
-const ErrorMessage = styled.p`
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	bottom: -15px;
-	font-size: 10px;
-	color: ${({ theme }) => theme.textColor.error};
 `;

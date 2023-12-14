@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
@@ -7,12 +8,18 @@ import MobileMenu from "../mobile-menu/MobileMenu";
 
 import Input from "../common/Input";
 import Button from "../common/Button";
+import ErrorMessage from "../common/ErrorMessage";
+
+import { useLogin } from "../../api/mutations/auth/useLogin";
 
 import { ILoginFormValues } from "../../interface/login";
 import { ButtonTheme } from "../../interface/styles";
 
 const LoginPage = () => {
 	const isDesktop = useMediaQuery({ query: "(min-width: 1280px)" });
+	const navigate = useNavigate();
+
+	const { data, isPending, error, mutate, reset } = useLogin();
 
 	const {
 		register,
@@ -25,8 +32,15 @@ const LoginPage = () => {
 		},
 	});
 
+	useEffect(() => {
+		if (!data) return;
+
+		reset();
+		navigate("/");
+	}, [data, navigate, reset]);
+
 	const onSubmit = (formValues: ILoginFormValues) => {
-		console.log("formValues", formValues);
+		mutate({ body: formValues });
 	};
 
 	return (
@@ -64,8 +78,9 @@ const LoginPage = () => {
 						error={errors.password}
 					/>
 
-					<Button btntheme={ButtonTheme.Orange} style={{ marginTop: "24px" }}>
+					<Button btntheme={ButtonTheme.Orange} style={{ marginTop: "24px" }} disabled={isPending}>
 						Login
+						{!!error && <ErrorMessage message={error.message} />}
 					</Button>
 				</FormStyled>
 
