@@ -1,18 +1,10 @@
 import { FC } from "react";
-import { Link } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 import { useModalContext } from "../../context/ModalProvider";
 
-import Button from "./Button";
-
-import { ButtonTheme } from "../../interface/styles";
-
 const SignInNav: FC = () => {
-	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
-	const btnFontSize = isMobile ? "14px" : "20px";
-
 	const { setModal } = useModalContext();
 
 	const onLinkClick = () => {
@@ -21,15 +13,13 @@ const SignInNav: FC = () => {
 
 	return (
 		<SignInNavStyled>
-			<Link to="/login" onClick={onLinkClick}>
-				<Button fontSize={btnFontSize}>Login</Button>
-			</Link>
+			<NavLinkStyled to="/login" onClick={onLinkClick}>
+				Login
+			</NavLinkStyled>
 
-			<Link to="/registration" onClick={onLinkClick}>
-				<Button btntheme={ButtonTheme.Orange} fontSize={btnFontSize}>
-					Registration
-				</Button>
-			</Link>
+			<NavLinkStyled to="/registration" onClick={onLinkClick}>
+				Registration
+			</NavLinkStyled>
 		</SignInNavStyled>
 	);
 };
@@ -51,5 +41,36 @@ const SignInNavStyled = styled.div<{ isMobile?: boolean }>`
 	@media screen and (min-width: 1280px) {
 		max-width: 1280px;
 		padding: 0 16px;
+	}
+`;
+
+const NavLinkStyled = styled(NavLink)`
+	position: relative;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: normal;
+	letter-spacing: 0.8px;
+	border-radius: 40px;
+	border: ${({ theme }) => `2px solid ${theme.borderColor.primary}`};
+	padding: 10px 28px;
+	color: ${({ theme }) => theme.textColor.black};
+	background-color: ${({ theme }) => theme.textColor.white};
+
+	@media screen and (min-width: 768px) {
+		font-size: 20px;
+	}
+
+	&:hover {
+		border-color: ${({ theme }) => theme.borderColor.primaryAccent};
+	}
+
+	&.active {
+		color: ${({ theme }) => theme.textColor.white};
+		background-color: ${({ theme }) => theme.textColor.primary};
 	}
 `;

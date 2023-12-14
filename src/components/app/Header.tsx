@@ -1,18 +1,27 @@
 import { useMediaQuery } from "react-responsive";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import Logo from "./Logo";
 import SignInNav from "../common/SignInNav";
 import Navigation from "../common/Navigation";
-
+import Button from "../common/Button";
 import Burger from "../common/icons/Burger";
+import Person from "../common/icons/Person";
+
 import { useModalContext } from "../../context/ModalProvider";
+import { useAuthContext } from "../../context/AuthProvider";
+
+import { ButtonTheme } from "../../interface/styles";
 
 const Header = () => {
 	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 	const isDesktop = useMediaQuery({ query: "(min-width: 1280px)" });
 
 	const { setModal } = useModalContext();
+	const { auth } = useAuthContext();
+
+	const isAuth = !!auth.email;
 
 	const onBurgerClick = () => {
 		setModal((prev) => ({ ...prev, isMobileMenuOpen: !prev.isMobileMenuOpen }));
@@ -26,7 +35,15 @@ const Header = () => {
 			</NavWrapper>
 
 			<MenuWrapper>
-				{!isMobile && <SignInNav />}
+				{!isMobile && !isAuth && <SignInNav />}
+				{!isMobile && isAuth && (
+					<Link to="/account">
+						<Button type="button" btntheme={ButtonTheme.Orange}>
+							<Person />
+							Account
+						</Button>
+					</Link>
+				)}
 
 				<BurgerWrapper onClick={onBurgerClick}>
 					<Burger />

@@ -27,6 +27,7 @@ const ButtonStyled = styled.button<{ btntheme: ButtonTheme; padding?: string; fo
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	gap: 12px;
 	font-size: ${({ fontSize }) => fontSize || "20px"};
 	font-weight: 500;
 	line-height: normal;

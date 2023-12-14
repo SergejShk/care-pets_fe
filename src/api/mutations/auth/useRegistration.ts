@@ -11,13 +11,7 @@ import { IRegisteredUser, IRegistrationReq } from "../../../interface/registrati
 export const useRegistration = () => {
 	const { setAuth } = useAuthContext();
 
-	return useMutation<
-		ApiResult<IRegisteredUser>,
-		AxiosError<ApiError>,
-		{
-			body: IRegistrationReq;
-		}
-	>({
+	return useMutation<ApiResult<IRegisteredUser>, AxiosError<ApiError>, { body: IRegistrationReq }>({
 		mutationFn: async ({ body }) => {
 			const data = await registrationApi(body);
 

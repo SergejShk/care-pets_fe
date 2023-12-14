@@ -1,19 +1,38 @@
 import { useMediaQuery } from "react-responsive";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import SignInNav from "../common/SignInNav";
 import Navigation from "../common/Navigation";
+import Button from "../common/Button";
+import Person from "../common/icons/Person";
+
 import { useModalContext } from "../../context/ModalProvider";
+import { useAuthContext } from "../../context/AuthProvider";
+
+import { ButtonTheme } from "../../interface/styles";
 
 const MobileMenu = () => {
 	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
-	const {
-		modal: { isMobileMenuOpen },
-	} = useModalContext();
+
+	const { auth } = useAuthContext();
+	const { modal } = useModalContext();
+
+	const isAuth = !!auth.email;
+	const { isMobileMenuOpen } = modal;
 
 	return (
 		<MobileMenuStyled className={isMobileMenuOpen ? "isOpen" : ""}>
-			{isMobile && <SignInNav />}
+			{isMobile && !isAuth && <SignInNav />}
+			{!isMobile && isAuth && (
+				<Link to="/account">
+					<Button type="button" btntheme={ButtonTheme.Orange}>
+						<Person />
+						Account
+					</Button>
+				</Link>
+			)}
+
 			<Navigation />
 		</MobileMenuStyled>
 	);

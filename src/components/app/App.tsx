@@ -8,6 +8,7 @@ import SharedLayout from "../common/SharedLayout";
 const HomePage = lazy(() => import("../home/HomePage"));
 const LoginPage = lazy(() => import("../login/LoginPage"));
 const RegistrationPage = lazy(() => import("../registration/RegistrationPage"));
+const Account = lazy(() => import("../account/AccountPage"));
 const News = lazy(() => import("../news/NewsPage"));
 const FindPetPage = lazy(() => import("../find-pet/FindPetPage"));
 const OurFriendPage = lazy(() => import("../our-friend/OurFriendPage"));
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
 			{
 				path: "/registration",
 				element: <RegistrationPage />,
+			},
+			{
+				path: "/account",
+				element: <Account />,
 			},
 			{
 				path: "/news",
