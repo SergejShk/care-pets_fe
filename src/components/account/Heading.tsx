@@ -5,13 +5,14 @@ import Plus from "../common/icons/Plus";
 
 interface IProps {
 	title: string;
+	maxWidth?: string;
 	hasAddBtn?: boolean;
 	isMainHeading?: boolean;
 }
 
-const Heading: FC<IProps> = ({ title, hasAddBtn = false, isMainHeading = false }) => {
+const Heading: FC<IProps> = ({ title, maxWidth, hasAddBtn = false, isMainHeading = false }) => {
 	return (
-		<HeadingStyled isMainHeading={isMainHeading}>
+		<HeadingStyled isMainHeading={isMainHeading} maxWidth={maxWidth}>
 			{title}
 
 			{hasAddBtn && (
@@ -28,8 +29,9 @@ const Heading: FC<IProps> = ({ title, hasAddBtn = false, isMainHeading = false }
 
 export default Heading;
 
-const HeadingStyled = styled.div<{ isMainHeading?: boolean }>`
+const HeadingStyled = styled.div<{ isMainHeading?: boolean; maxWidth?: string }>`
 	width: calc(100% - 40px);
+	max-width: ${({ maxWidth }) => maxWidth};
 	display: flex;
 	align-items: center;
 	justify-content: space-between;

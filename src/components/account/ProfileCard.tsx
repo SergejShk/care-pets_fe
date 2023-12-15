@@ -5,12 +5,17 @@ import PhotoCamera from "../common/icons/PhotoCamera";
 import Pencil from "../common/icons/Pencil";
 
 import LogOutBtn from "./LogOutBtn";
+import { IUser } from "../../interface/user";
 
-const ProfileCard: FC = () => {
+interface IProps {
+	user: IUser;
+}
+
+const ProfileCard: FC<IProps> = ({ user }) => {
 	return (
 		<ProfileCardStyled>
 			<PhotoBlock>
-				<Avatar src="/avatar.png" alt="avatar" />
+				<Avatar src={user?.photo || "/avatar.png"} alt="user avatar" />
 				<EditPhotoBtn>
 					<PhotoCamera />
 					Edit photo
@@ -21,7 +26,7 @@ const ProfileCard: FC = () => {
 				<InfoList>
 					<InfoItem>
 						<InfoTitle>Name: </InfoTitle>
-						<InfoValueText>Anna</InfoValueText>
+						<InfoValueText>{user.name}</InfoValueText>
 						<EditInfoBtn>
 							<Pencil />
 						</EditInfoBtn>
@@ -29,7 +34,7 @@ const ProfileCard: FC = () => {
 
 					<InfoItem>
 						<InfoTitle>Email: </InfoTitle>
-						<InfoValueText>anna00@gmail.com</InfoValueText>
+						<InfoValueText>{user.email}</InfoValueText>
 						<EditInfoBtn>
 							<Pencil />
 						</EditInfoBtn>
@@ -37,7 +42,7 @@ const ProfileCard: FC = () => {
 
 					<InfoItem>
 						<InfoTitle>Birthday: </InfoTitle>
-						<InfoValueText>00.00.0000</InfoValueText>
+						<InfoValueText>{user?.birthday || ""}</InfoValueText>
 						<EditInfoBtn>
 							<Pencil />
 						</EditInfoBtn>
@@ -45,15 +50,15 @@ const ProfileCard: FC = () => {
 
 					<InfoItem>
 						<InfoTitle>Phone: </InfoTitle>
-						<InfoValueText>+38000000000</InfoValueText>
+						<InfoValueText>{user.phone}</InfoValueText>
 						<EditInfoBtn>
 							<Pencil />
 						</EditInfoBtn>
 					</InfoItem>
 
 					<InfoItem>
-						<InfoTitle>City:: </InfoTitle>
-						<InfoValueText>Kiev</InfoValueText>
+						<InfoTitle>City: </InfoTitle>
+						<InfoValueText>{user.city}</InfoValueText>
 						<EditInfoBtn>
 							<Pencil />
 						</EditInfoBtn>
@@ -116,6 +121,7 @@ const PhotoBlock = styled.div`
 `;
 
 const Avatar = styled.img`
+	display: block;
 	width: 233px;
 	height: 233px;
 	border-radius: 50%;
@@ -214,6 +220,7 @@ const EditInfoBtn = styled.button`
 	border: none;
 	cursor: pointer;
 	border-radius: 50%;
+	padding: 0;
 
 	@media screen and (min-width: 768px) {
 		width: 32px;
