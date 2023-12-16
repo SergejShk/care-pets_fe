@@ -16,7 +16,7 @@ export interface ISecondStepRegistrationFormValues {
 export interface IRegistrationReq extends IFirstStepRegistration, ISecondStepRegistrationFormValues {}
 
 export interface IRegisteredUser {
-	id: string;
+	id: number;
 	email: string;
 	name: string;
 	city: string;

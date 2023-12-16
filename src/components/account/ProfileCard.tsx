@@ -12,6 +12,8 @@ interface IProps {
 }
 
 const ProfileCard: FC<IProps> = ({ user }) => {
+	const date = user?.birthday ? new Date(user?.birthday).toLocaleDateString() : "";
+
 	return (
 		<ProfileCardStyled>
 			<PhotoBlock>
@@ -42,7 +44,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 
 					<InfoItem>
 						<InfoTitle>Birthday: </InfoTitle>
-						<InfoValueText>{user?.birthday || ""}</InfoValueText>
+						<InfoValueText>{date}</InfoValueText>
 						<EditInfoBtn>
 							<Pencil />
 						</EditInfoBtn>

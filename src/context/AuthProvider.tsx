@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export const initialState: IUser = {
-	id: "",
+	id: 0,
 	email: "",
 	name: "",
 	city: "",
