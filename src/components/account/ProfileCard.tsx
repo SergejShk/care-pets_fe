@@ -1,18 +1,116 @@
-import { FC } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import PhotoCamera from "../common/icons/PhotoCamera";
-import Pencil from "../common/icons/Pencil";
 
 import LogOutBtn from "./LogOutBtn";
-import { IUser } from "../../interface/user";
+
+import { updateProfileApi } from "../../api/services/profile/updateProfile";
+import { useGetMe } from "../../api/mutations/auth/useGetMe";
+
+import { IProfileState, IUser, UpdateUserKeys } from "../../interface/user";
 
 interface IProps {
 	user: IUser;
 }
 
+const initialState = {
+	name: "",
+	email: "",
+	city: "",
+	phone: "",
+	birthday: undefined,
+};
+
 const ProfileCard: FC<IProps> = ({ user }) => {
+	const { id: userId, name, email, city, phone, birthday } = user;
+
+	const [userState, setUserState] = useState<IProfileState>(initialState);
+	const [activeInputId, setActiveInputId] = useState<string | null>(null);
+
+	const { mutate: updateCurrentUser } = useGetMe();
+
+	const listRef = useRef<HTMLUListElement | null>(null);
+	const inputNameRef = useRef<HTMLInputElement | null>(null);
+	const inputEmailRef = useRef<HTMLInputElement | null>(null);
+	const inputCityRef = useRef<HTMLInputElement | null>(null);
+	const inputPhoneRef = useRef<HTMLInputElement | null>(null);
+
 	const date = user?.birthday ? new Date(user?.birthday).toLocaleDateString() : "";
+
+	const setInitialState = useCallback(
+		() =>
+			setUserState({
+				name,
+				email,
+				city,
+				phone,
+				birthday,
+			}),
+		[birthday, city, email, name, phone]
+	);
+
+	const onInputBlur = useCallback(
+		(e: MouseEvent) => {
+			const target = e.target as HTMLElement;
+
+			if (target.id == activeInputId) return;
+
+			setActiveInputId(null);
+			setInitialState();
+		},
+		[activeInputId, setInitialState]
+	);
+
+	useEffect(() => {
+		setInitialState();
+	}, [setInitialState]);
+
+	useEffect(() => {
+		document.body.addEventListener("mousedown", onInputBlur, true);
+
+		return () => {
+			document.body.removeEventListener("mousedown", onInputBlur, true);
+		};
+	}, [onInputBlur]);
+
+	const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+
+		setUserState((prev) => ({ ...prev, [name]: value }));
+	};
+
+	const onInputFocus = (id: string) => {
+		if (!listRef.current) return;
+		const itemId = "item-" + id;
+
+		const listItems = Object.values(listRef.current.children);
+		const item = listItems.find((item) => item.id === itemId);
+
+		if (!item) return;
+
+		const input = item.children[1] as HTMLInputElement;
+		input.disabled = false;
+		input.focus();
+	};
+
+	const onClickEditBtn = async (e: React.MouseEvent<HTMLElement>) => {
+		const id = e.currentTarget.id as UpdateUserKeys;
+
+		if (activeInputId === id && userState[id] !== user[id]) {
+			await updateProfileApi({ id: userId, [id]: userState[id] });
+
+			updateCurrentUser();
+			setActiveInputId(null);
+			return;
+		}
+
+		if (activeInputId !== id) {
+			setInitialState();
+			setActiveInputId(id);
+			onInputFocus(id);
+		}
+	};
 
 	return (
 		<ProfileCardStyled>
@@ -25,45 +123,71 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 			</PhotoBlock>
 
 			<InfoBlock>
-				<InfoList>
-					<InfoItem>
+				<InfoList ref={listRef}>
+					<InfoItem id="item-name">
 						<InfoTitle>Name: </InfoTitle>
-						<InfoValueText>{user.name}</InfoValueText>
-						<EditInfoBtn>
-							<Pencil />
-						</EditInfoBtn>
+						<InputProfile
+							ref={inputNameRef}
+							id="name"
+							name="name"
+							type="text"
+							autoComplete="off"
+							value={userState.name}
+							onChange={onInputChange}
+							disabled={activeInputId !== "name"}
+						/>
+						<EditInfoBtn id="name" $isActive={activeInputId === "name"} onClick={onClickEditBtn} />
 					</InfoItem>
 
-					<InfoItem>
+					<InfoItem id="item-email">
 						<InfoTitle>Email: </InfoTitle>
-						<InfoValueText>{user.email}</InfoValueText>
-						<EditInfoBtn>
-							<Pencil />
-						</EditInfoBtn>
+						<InputProfile
+							ref={inputEmailRef}
+							id="email"
+							name="email"
+							type="email"
+							autoComplete="off"
+							value={userState.email}
+							onChange={onInputChange}
+							disabled={activeInputId !== "email"}
+						/>
+						<EditInfoBtn id="email" $isActive={activeInputId === "email"} onClick={onClickEditBtn} />
 					</InfoItem>
 
-					<InfoItem>
+					<InfoItem id="item-birthday">
 						<InfoTitle>Birthday: </InfoTitle>
 						<InfoValueText>{date}</InfoValueText>
-						<EditInfoBtn>
-							<Pencil />
-						</EditInfoBtn>
+						<EditInfoBtn id="birthday" $isActive={activeInputId === "birthday"} onClick={onClickEditBtn} />
 					</InfoItem>
 
-					<InfoItem>
+					<InfoItem id="item-phone">
 						<InfoTitle>Phone: </InfoTitle>
-						<InfoValueText>{user.phone}</InfoValueText>
-						<EditInfoBtn>
-							<Pencil />
-						</EditInfoBtn>
+						<InputProfile
+							ref={inputPhoneRef}
+							id="phone"
+							name="phone"
+							type="text"
+							autoComplete="off"
+							value={userState.phone}
+							onChange={onInputChange}
+							disabled={activeInputId !== "phone"}
+						/>
+						<EditInfoBtn id="phone" $isActive={activeInputId === "phone"} onClick={onClickEditBtn} />
 					</InfoItem>
 
-					<InfoItem>
+					<InfoItem id="item-city">
 						<InfoTitle>City: </InfoTitle>
-						<InfoValueText>{user.city}</InfoValueText>
-						<EditInfoBtn>
-							<Pencil />
-						</EditInfoBtn>
+						<InputProfile
+							ref={inputCityRef}
+							id="city"
+							name="city"
+							type="text"
+							autoComplete="off"
+							value={userState.city}
+							onChange={onInputChange}
+							disabled={activeInputId !== "city"}
+						/>
+						<EditInfoBtn id="city" $isActive={activeInputId === "city"} onClick={onClickEditBtn} />
 					</InfoItem>
 				</InfoList>
 				<LogOutBtn />
@@ -183,19 +307,7 @@ const InfoItem = styled.li`
 	width: 100%;
 	display: flex;
 	align-items: center;
-`;
-
-const InfoTitle = styled.h3`
-	width: 30%;
-	font-size: 12px;
-	font-weight: 500;
-	line-height: normal;
-	letter-spacing: 0.48px;
-	padding: 0 5px 0 0;
-
-	@media screen and (min-width: 768px) {
-		font-size: 18px;
-	}
+	justify-content: space-between;
 `;
 
 const InfoValueText = styled.p`
@@ -211,7 +323,7 @@ const InfoValueText = styled.p`
 	}
 `;
 
-const EditInfoBtn = styled.button`
+const EditInfoBtn = styled.button<{ $isActive: boolean }>`
 	width: 20px;
 	height: 20px;
 	display: flex;
@@ -223,9 +335,50 @@ const EditInfoBtn = styled.button`
 	cursor: pointer;
 	border-radius: 50%;
 	padding: 0;
+	background-image: ${({ $isActive }) =>
+		$isActive ? 'url("/icons/check-mark.svg")' : 'url("/icons/pencil.svg")'};
+	background-size: auto;
+	background-position: center center;
+	background-repeat: no-repeat;
 
 	@media screen and (min-width: 768px) {
 		width: 32px;
 		height: 32px;
+	}
+`;
+
+const InfoTitle = styled.h3`
+	width: 25%;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: normal;
+	letter-spacing: 0.48px;
+
+	@media screen and (min-width: 768px) {
+		font-size: 18px;
+	}
+`;
+
+const InputProfile = styled.input`
+	width: calc(216px - 24px);
+	display: flex;
+	align-items: center;
+	color: ${({ theme }) => theme.textColor.black};
+	font-size: 12px;
+	letter-spacing: 0.72px;
+	padding: 4px 12px 3px;
+	border-radius: 40px;
+	border: 1px solid rgba(245, 146, 86, 0.5);
+	background-color: ${({ theme }) => theme.backgroundColor.main};
+	outline: none;
+
+	&:disabled {
+		background-color: transparent;
+		border-color: transparent;
+	}
+
+	@media screen and (min-width: 768px) {
+		font-size: 18px;
+		width: calc(216px - 24px);
 	}
 `;
