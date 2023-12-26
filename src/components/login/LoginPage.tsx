@@ -36,7 +36,7 @@ const LoginPage: FC = () => {
 		if (!data) return;
 
 		reset();
-		navigate("/");
+		navigate("/account");
 	}, [data, navigate, reset]);
 
 	const onSubmit = (formValues: ILoginFormValues) => {

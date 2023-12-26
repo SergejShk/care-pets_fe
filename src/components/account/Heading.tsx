@@ -12,7 +12,7 @@ interface IProps {
 
 const Heading: FC<IProps> = ({ title, maxWidth, hasAddBtn = false, isMainHeading = false }) => {
 	return (
-		<HeadingStyled isMainHeading={isMainHeading} maxWidth={maxWidth}>
+		<HeadingStyled $isMainHeading={isMainHeading} $maxWidth={maxWidth}>
 			{title}
 
 			{hasAddBtn && (
@@ -29,9 +29,9 @@ const Heading: FC<IProps> = ({ title, maxWidth, hasAddBtn = false, isMainHeading
 
 export default Heading;
 
-const HeadingStyled = styled.div<{ isMainHeading?: boolean; maxWidth?: string }>`
+const HeadingStyled = styled.div<{ $isMainHeading?: boolean; $maxWidth?: string }>`
 	width: calc(100% - 40px);
-	max-width: ${({ maxWidth }) => maxWidth};
+	max-width: ${({ $maxWidth }) => $maxWidth};
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -40,19 +40,19 @@ const HeadingStyled = styled.div<{ isMainHeading?: boolean; maxWidth?: string }>
 	line-height: normal;
 	letter-spacing: 0.8px;
 	padding: 0 20px;
-	margin: ${({ isMainHeading }) => (isMainHeading ? "0 0 18px" : "47px 0 32px")};
+	margin: ${({ $isMainHeading }) => ($isMainHeading ? "0 0 18px" : "47px 0 32px")};
 
 	@media screen and (min-width: 768px) {
 		width: calc(100% - 64px);
 		font-size: 28px;
 		padding: 0 32px;
-		margin: ${({ isMainHeading }) => (isMainHeading ? "0 0 40px" : "20px 0 24px")};
+		margin: ${({ $isMainHeading }) => ($isMainHeading ? "0 0 40px" : "20px 0 24px")};
 		align-items: flex-start;
 	}
 
 	@media screen and (min-width: 1280px) {
 		width: calc(100% - 17px);
-		padding: ${({ isMainHeading }) => (isMainHeading ? "0 0 0 17px" : "0 17px 0 0")};
+		padding: ${({ $isMainHeading }) => ($isMainHeading ? "0 0 0 17px" : "0 17px 0 0")};
 		margin: 0 0 24px;
 	}
 `;

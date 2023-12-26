@@ -37,7 +37,7 @@ const SecondStepRegistration: FC<IProps> = ({ firstStepValues }) => {
 		if (!data) return;
 
 		reset();
-		navigate("/");
+		navigate("/account");
 	}, [data, navigate, reset]);
 
 	const onSubmit = (formValues: ISecondStepRegistrationFormValues) => {
