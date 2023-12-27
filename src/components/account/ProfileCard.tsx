@@ -8,7 +8,8 @@ import LogOutBtn from "./LogOutBtn";
 import { updateProfileApi } from "../../api/services/profile/updateProfile";
 import { useGetMe } from "../../api/mutations/auth/useGetMe";
 
-import { IProfileState, IUser, UpdateUserKeys } from "../../interface/user";
+import { IErrorProfile, IProfileState, IUser, UpdateUserKeys } from "../../interface/user";
+import { profileShema } from "../../validation/profile";
 
 interface IProps {
 	user: IUser;
@@ -27,6 +28,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 
 	const [userState, setUserState] = useState<IProfileState>(initialState);
 	const [activeInputId, setActiveInputId] = useState<string | null>(null);
+	const [error, setError] = useState<IErrorProfile | null>(null);
 
 	const { mutate: updateCurrentUser } = useGetMe();
 
@@ -58,6 +60,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 
 			setActiveInputId(null);
 			setInitialState();
+			setError(null);
 		},
 		[activeInputId, setInitialState]
 	);
@@ -98,10 +101,18 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 		const id = e.currentTarget.id as UpdateUserKeys;
 
 		if (activeInputId === id && userState[id] !== user[id]) {
-			await updateProfileApi({ id: userId, [id]: userState[id] });
+			const validatedValue = profileShema[id].safeParse(userState[id]);
+
+			if (!validatedValue.success) {
+				setError({ [id]: validatedValue.error.issues[0].message });
+				return;
+			}
+
+			await updateProfileApi({ id: userId, [id]: validatedValue.data });
 
 			updateCurrentUser();
 			setActiveInputId(null);
+			setError(null);
 			return;
 		}
 
@@ -126,31 +137,37 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 				<InfoList ref={listRef}>
 					<InfoItem id="item-name">
 						<InfoTitle>Name: </InfoTitle>
-						<InputProfile
-							ref={inputNameRef}
-							id="name"
-							name="name"
-							type="text"
-							autoComplete="off"
-							value={userState.name}
-							onChange={onInputChange}
-							disabled={activeInputId !== "name"}
-						/>
+						<InputWrapper>
+							<InputProfile
+								ref={inputNameRef}
+								id="name"
+								name="name"
+								type="text"
+								autoComplete="off"
+								value={userState.name}
+								onChange={onInputChange}
+								disabled={activeInputId !== "name"}
+							/>
+							{error?.name && <ErrorText role="alert">{error?.name}</ErrorText>}
+						</InputWrapper>
 						<EditInfoBtn id="name" $isActive={activeInputId === "name"} onClick={onClickEditBtn} />
 					</InfoItem>
 
 					<InfoItem id="item-email">
 						<InfoTitle>Email: </InfoTitle>
-						<InputProfile
-							ref={inputEmailRef}
-							id="email"
-							name="email"
-							type="email"
-							autoComplete="off"
-							value={userState.email}
-							onChange={onInputChange}
-							disabled={activeInputId !== "email"}
-						/>
+						<InputWrapper>
+							<InputProfile
+								ref={inputEmailRef}
+								id="email"
+								name="email"
+								type="email"
+								autoComplete="off"
+								value={userState.email}
+								onChange={onInputChange}
+								disabled={activeInputId !== "email"}
+							/>
+							{error?.email && <ErrorText role="alert">{error?.email}</ErrorText>}
+						</InputWrapper>
 						<EditInfoBtn id="email" $isActive={activeInputId === "email"} onClick={onClickEditBtn} />
 					</InfoItem>
 
@@ -162,31 +179,37 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 
 					<InfoItem id="item-phone">
 						<InfoTitle>Phone: </InfoTitle>
-						<InputProfile
-							ref={inputPhoneRef}
-							id="phone"
-							name="phone"
-							type="text"
-							autoComplete="off"
-							value={userState.phone}
-							onChange={onInputChange}
-							disabled={activeInputId !== "phone"}
-						/>
+						<InputWrapper>
+							<InputProfile
+								ref={inputPhoneRef}
+								id="phone"
+								name="phone"
+								type="text"
+								autoComplete="off"
+								value={userState.phone}
+								onChange={onInputChange}
+								disabled={activeInputId !== "phone"}
+							/>
+							{error?.phone && <ErrorText role="alert">{error?.phone}</ErrorText>}
+						</InputWrapper>
 						<EditInfoBtn id="phone" $isActive={activeInputId === "phone"} onClick={onClickEditBtn} />
 					</InfoItem>
 
 					<InfoItem id="item-city">
 						<InfoTitle>City: </InfoTitle>
-						<InputProfile
-							ref={inputCityRef}
-							id="city"
-							name="city"
-							type="text"
-							autoComplete="off"
-							value={userState.city}
-							onChange={onInputChange}
-							disabled={activeInputId !== "city"}
-						/>
+						<InputWrapper>
+							<InputProfile
+								ref={inputCityRef}
+								id="city"
+								name="city"
+								type="text"
+								autoComplete="off"
+								value={userState.city}
+								onChange={onInputChange}
+								disabled={activeInputId !== "city"}
+							/>
+							{error?.city && <ErrorText role="alert">{error?.city}</ErrorText>}
+						</InputWrapper>
 						<EditInfoBtn id="city" $isActive={activeInputId === "city"} onClick={onClickEditBtn} />
 					</InfoItem>
 				</InfoList>
@@ -359,8 +382,14 @@ const InfoTitle = styled.h3`
 	}
 `;
 
+const InputWrapper = styled.div`
+	position: relative;
+	width: 216px;
+`;
+
 const InputProfile = styled.input`
-	width: calc(216px - 24px);
+	/* width: calc(216px - 24px); */
+	width: 100%;
 	display: flex;
 	align-items: center;
 	color: ${({ theme }) => theme.textColor.black};
@@ -381,4 +410,14 @@ const InputProfile = styled.input`
 		font-size: 18px;
 		width: calc(216px - 24px);
 	}
+`;
+
+const ErrorText = styled.span`
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: -15px;
+	width: 100%;
+	font-size: 10px;
+	color: ${({ theme }) => theme.textColor.error};
 `;

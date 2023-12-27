@@ -30,3 +30,11 @@ export interface IProfileState {
 	phone: string;
 	birthday?: Date;
 }
+
+export interface IErrorProfile {
+	name?: string;
+	email?: string;
+	city?: string;
+	phone?: string;
+	birthday?: string;
+}
