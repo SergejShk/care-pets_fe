@@ -79,7 +79,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 
 	const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-
+		setError(null);
 		setUserState((prev) => ({ ...prev, [name]: value }));
 	};
 
@@ -384,12 +384,15 @@ const InfoTitle = styled.h3`
 
 const InputWrapper = styled.div`
 	position: relative;
-	width: 216px;
+	width: 145px;
+
+	@media screen and (min-width: 768px) {
+		width: 216px;
+	}
 `;
 
 const InputProfile = styled.input`
-	/* width: calc(216px - 24px); */
-	width: 100%;
+	width: calc(145px - 26px);
 	display: flex;
 	align-items: center;
 	color: ${({ theme }) => theme.textColor.black};
