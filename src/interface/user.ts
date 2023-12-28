@@ -28,7 +28,7 @@ export interface IProfileState {
 	email: string;
 	city: string;
 	phone: string;
-	birthday?: Date;
+	birthday: string;
 }
 
 export interface IErrorProfile {

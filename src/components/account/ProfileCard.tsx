@@ -1,6 +1,7 @@
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
+import Datepicker from "../common/Datepicker";
 import PhotoCamera from "../common/icons/PhotoCamera";
 
 import LogOutBtn from "./LogOutBtn";
@@ -8,8 +9,12 @@ import LogOutBtn from "./LogOutBtn";
 import { updateProfileApi } from "../../api/services/profile/updateProfile";
 import { useGetMe } from "../../api/mutations/auth/useGetMe";
 
-import { IErrorProfile, IProfileState, IUser, UpdateUserKeys } from "../../interface/user";
 import { profileShema } from "../../validation/profile";
+
+import { convertDateFromString, convertDateToString } from "../../utils/dateFormatter";
+
+import { TDateValue } from "../../interface/common";
+import { IErrorProfile, IProfileState, IUser, UpdateUserKeys } from "../../interface/user";
 
 interface IProps {
 	user: IUser;
@@ -20,7 +25,7 @@ const initialState = {
 	email: "",
 	city: "",
 	phone: "",
-	birthday: undefined,
+	birthday: "",
 };
 
 const ProfileCard: FC<IProps> = ({ user }) => {
@@ -32,31 +37,31 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 
 	const { mutate: updateCurrentUser } = useGetMe();
 
-	const listRef = useRef<HTMLUListElement | null>(null);
-	const inputNameRef = useRef<HTMLInputElement | null>(null);
-	const inputEmailRef = useRef<HTMLInputElement | null>(null);
-	const inputCityRef = useRef<HTMLInputElement | null>(null);
-	const inputPhoneRef = useRef<HTMLInputElement | null>(null);
+	const listRef = {
+		name: useRef<HTMLInputElement | null>(null),
+		email: useRef<HTMLInputElement | null>(null),
+		city: useRef<HTMLInputElement | null>(null),
+		phone: useRef<HTMLInputElement | null>(null),
+		birthday: useRef<HTMLInputElement | null>(null),
+	};
 
-	const date = user?.birthday ? new Date(user?.birthday).toLocaleDateString() : "";
+	const setInitialState = useCallback(() => {
+		const birthdayString = birthday ? convertDateToString(new Date(birthday)) : "";
 
-	const setInitialState = useCallback(
-		() =>
-			setUserState({
-				name,
-				email,
-				city,
-				phone,
-				birthday,
-			}),
-		[birthday, city, email, name, phone]
-	);
+		setUserState({
+			name,
+			email,
+			city,
+			phone,
+			birthday: birthdayString,
+		});
+	}, [birthday, city, email, name, phone]);
 
 	const onInputBlur = useCallback(
 		(e: MouseEvent) => {
 			const target = e.target as HTMLElement;
 
-			if (target.id == activeInputId) return;
+			if (target.id === activeInputId) return;
 
 			setActiveInputId(null);
 			setInitialState();
@@ -67,41 +72,39 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 
 	useEffect(() => {
 		setInitialState();
-	}, [setInitialState]);
+	}, [setInitialState, birthday, city, email, name, phone]);
 
 	useEffect(() => {
-		document.body.addEventListener("mousedown", onInputBlur, true);
+		document.body.addEventListener("click", onInputBlur, true);
 
 		return () => {
-			document.body.removeEventListener("mousedown", onInputBlur, true);
+			document.body.removeEventListener("click", onInputBlur, true);
 		};
 	}, [onInputBlur]);
 
 	const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
+
 		setError(null);
 		setUserState((prev) => ({ ...prev, [name]: value }));
 	};
 
-	const onInputFocus = (id: string) => {
-		if (!listRef.current) return;
-		const itemId = "item-" + id;
+	const onInputFocus = (id: UpdateUserKeys) => {
+		const input = listRef[id];
 
-		const listItems = Object.values(listRef.current.children);
-		const item = listItems.find((item) => item.id === itemId);
+		if (!input.current) return;
 
-		if (!item) return;
-
-		const input = item.children[1] as HTMLInputElement;
-		input.disabled = false;
-		input.focus();
+		input.current.disabled = false;
+		input.current.focus();
 	};
 
 	const onClickEditBtn = async (e: React.MouseEvent<HTMLElement>) => {
 		const id = e.currentTarget.id as UpdateUserKeys;
 
+		const payload = id === "birthday" ? convertDateFromString(userState[id]) : userState[id];
+
 		if (activeInputId === id && userState[id] !== user[id]) {
-			const validatedValue = profileShema[id].safeParse(userState[id]);
+			const validatedValue = profileShema[id].safeParse(payload);
 
 			if (!validatedValue.success) {
 				setError({ [id]: validatedValue.error.issues[0].message });
@@ -123,6 +126,16 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 		}
 	};
 
+	const onManualDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setUserState((prev) => ({ ...prev, birthday: e.target.value }));
+	};
+
+	const onBirthdayChange = (value: TDateValue) => {
+		const birthdayString = convertDateToString(value as Date);
+
+		setUserState((prev) => ({ ...prev, birthday: birthdayString }));
+	};
+
 	return (
 		<ProfileCardStyled>
 			<PhotoBlock>
@@ -134,12 +147,12 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 			</PhotoBlock>
 
 			<InfoBlock>
-				<InfoList ref={listRef}>
+				<InfoList>
 					<InfoItem id="item-name">
 						<InfoTitle>Name: </InfoTitle>
 						<InputWrapper>
 							<InputProfile
-								ref={inputNameRef}
+								ref={listRef.name}
 								id="name"
 								name="name"
 								type="text"
@@ -157,7 +170,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 						<InfoTitle>Email: </InfoTitle>
 						<InputWrapper>
 							<InputProfile
-								ref={inputEmailRef}
+								ref={listRef.email}
 								id="email"
 								name="email"
 								type="email"
@@ -173,7 +186,18 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 
 					<InfoItem id="item-birthday">
 						<InfoTitle>Birthday: </InfoTitle>
-						<InfoValueText>{date}</InfoValueText>
+						<InputWrapper>
+							<Datepicker
+								id="birthday"
+								inputRef={listRef.birthday}
+								value={userState.birthday}
+								handleManualInputChange={onManualDateChange}
+								handleChange={onBirthdayChange}
+								setActiveInputId={setActiveInputId}
+								disabled={activeInputId !== "birthday"}
+							/>
+							{error?.birthday && <ErrorText role="alert">{error?.birthday}</ErrorText>}
+						</InputWrapper>
 						<EditInfoBtn id="birthday" $isActive={activeInputId === "birthday"} onClick={onClickEditBtn} />
 					</InfoItem>
 
@@ -181,7 +205,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 						<InfoTitle>Phone: </InfoTitle>
 						<InputWrapper>
 							<InputProfile
-								ref={inputPhoneRef}
+								ref={listRef.phone}
 								id="phone"
 								name="phone"
 								type="text"
@@ -199,7 +223,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 						<InfoTitle>City: </InfoTitle>
 						<InputWrapper>
 							<InputProfile
-								ref={inputCityRef}
+								ref={listRef.city}
 								id="city"
 								name="city"
 								type="text"
@@ -331,19 +355,6 @@ const InfoItem = styled.li`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-`;
-
-const InfoValueText = styled.p`
-	width: 58%;
-	font-size: 12px;
-	line-height: normal;
-	letter-spacing: 0.48px;
-	padding: 0 5px 0 0;
-
-	@media screen and (min-width: 768px) {
-		font-size: 18px;
-		width: 62%;
-	}
 `;
 
 const EditInfoBtn = styled.button<{ $isActive: boolean }>`
