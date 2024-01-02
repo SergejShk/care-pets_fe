@@ -15,6 +15,10 @@ import { convertDateFromString, convertDateToString } from "../../utils/dateForm
 
 import { TDateValue } from "../../interface/common";
 import { IErrorProfile, IProfileState, IUser, UpdateUserKeys } from "../../interface/user";
+import { createPresignedPostApi } from "../../api/services/files/createPresignedPost";
+import { FolderType } from "../../interface/files";
+
+const BUCKET_PATH = import.meta.env.VITE_BUCKET_PATH;
 
 interface IProps {
 	user: IUser;
@@ -26,12 +30,14 @@ const initialState = {
 	city: "",
 	phone: "",
 	birthday: "",
+	photo: undefined,
 };
 
 const ProfileCard: FC<IProps> = ({ user }) => {
-	const { id: userId, name, email, city, phone, birthday } = user;
+	const { id: userId, name, email, city, phone, birthday, photo } = user;
 
 	const [userState, setUserState] = useState<IProfileState>(initialState);
+	// const [photoSrc, setPhotoSrc] = useState("");
 	const [activeInputId, setActiveInputId] = useState<string | null>(null);
 	const [error, setError] = useState<IErrorProfile | null>(null);
 
@@ -43,6 +49,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 		city: useRef<HTMLInputElement | null>(null),
 		phone: useRef<HTMLInputElement | null>(null),
 		birthday: useRef<HTMLInputElement | null>(null),
+		photo: useRef<HTMLInputElement | null>(null),
 	};
 
 	const setInitialState = useCallback(() => {
@@ -54,8 +61,9 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 			city,
 			phone,
 			birthday: birthdayString,
+			photo: photo || undefined,
 		});
-	}, [birthday, city, email, name, phone]);
+	}, [birthday, city, email, name, phone, photo]);
 
 	const onInputBlur = useCallback(
 		(e: MouseEvent) => {
@@ -73,6 +81,12 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 	useEffect(() => {
 		setInitialState();
 	}, [setInitialState, birthday, city, email, name, phone]);
+
+	// useEffect(() => {
+	// 	if (!userState.photo) return;
+
+	// 	setPhotoSrc(BUCKET_PATH + userState.photo);
+	// }, [userState.photo]);
 
 	useEffect(() => {
 		document.body.addEventListener("click", onInputBlur, true);
@@ -136,14 +150,66 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 		setUserState((prev) => ({ ...prev, birthday: birthdayString }));
 	};
 
+	const onEditPhotoBtnClick = () => listRef.photo.current?.click();
+
+	const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files![0];
+
+		if (file) {
+			const response = await createPresignedPostApi(
+				{
+					key: file.name,
+					type: "JPEG",
+				},
+				FolderType.Profile
+			);
+
+			const presignedLink = response.data.url;
+			const fields = response.data.fields;
+
+			const formData = new FormData();
+			Object.entries(fields).forEach(([k, v]) => {
+				formData.append(k, v);
+			});
+			formData.append("file", file);
+
+			fetch(presignedLink, {
+				method: "POST",
+				body: formData,
+			})
+				.then(async () => {
+					await updateProfileApi({
+						id: userId,
+						photo: {
+							originalKey: response.data.fields.key,
+							key: file.name,
+						},
+					});
+
+					updateCurrentUser();
+				})
+				.catch((e) => console.log(e));
+		}
+	};
+
+	const photoSrc = userState.photo?.originalKey ? BUCKET_PATH + userState.photo.originalKey : "/avatar.png";
+	console.log("photoSrc", photoSrc);
 	return (
 		<ProfileCardStyled>
 			<PhotoBlock>
-				<Avatar src={user?.photo || "/avatar.png"} alt="user avatar" />
-				<EditPhotoBtn>
+				<Avatar src={photoSrc || "/avatar.png"} alt="user avatar" />
+				<EditPhotoBtn type="button" onClick={onEditPhotoBtnClick}>
 					<PhotoCamera />
 					Edit photo
 				</EditPhotoBtn>
+
+				<input
+					className="hidden"
+					type="file"
+					ref={listRef.photo}
+					accept="image/*,.png,.jpg,.jpeg"
+					onChange={handlePhotoChange}
+				/>
 			</PhotoBlock>
 
 			<InfoBlock>

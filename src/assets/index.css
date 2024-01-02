@@ -45,3 +45,14 @@ p {
 button {
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
+.hidden {
+	height: 1px;
+	width: 1px;
+	position: absolute;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+	clip: rect(0 0 0 0);
+	overflow: hidden;
+}
