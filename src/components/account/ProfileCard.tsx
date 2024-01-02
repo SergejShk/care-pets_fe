@@ -11,11 +11,12 @@ import { useGetMe } from "../../api/mutations/auth/useGetMe";
 
 import { profileShema } from "../../validation/profile";
 
+import { usePhotoUpload } from "../../hooks/usePhotoUpload";
+
 import { convertDateFromString, convertDateToString } from "../../utils/dateFormatter";
 
 import { TDateValue } from "../../interface/common";
 import { IErrorProfile, IProfileState, IUser, UpdateUserKeys } from "../../interface/user";
-import { createPresignedPostApi } from "../../api/services/files/createPresignedPost";
 import { FolderType } from "../../interface/files";
 
 const BUCKET_PATH = import.meta.env.VITE_BUCKET_PATH;
@@ -37,11 +38,12 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 	const { id: userId, name, email, city, phone, birthday, photo } = user;
 
 	const [userState, setUserState] = useState<IProfileState>(initialState);
-	// const [photoSrc, setPhotoSrc] = useState("");
 	const [activeInputId, setActiveInputId] = useState<string | null>(null);
 	const [error, setError] = useState<IErrorProfile | null>(null);
 
 	const { mutate: updateCurrentUser } = useGetMe();
+
+	const { handlePhotoUpload } = usePhotoUpload();
 
 	const listRef = {
 		name: useRef<HTMLInputElement | null>(null),
@@ -81,12 +83,6 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 	useEffect(() => {
 		setInitialState();
 	}, [setInitialState, birthday, city, email, name, phone]);
-
-	// useEffect(() => {
-	// 	if (!userState.photo) return;
-
-	// 	setPhotoSrc(BUCKET_PATH + userState.photo);
-	// }, [userState.photo]);
 
 	useEffect(() => {
 		document.body.addEventListener("click", onInputBlur, true);
@@ -155,45 +151,13 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 	const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files![0];
 
-		if (file) {
-			const response = await createPresignedPostApi(
-				{
-					key: file.name,
-					type: "JPEG",
-				},
-				FolderType.Profile
-			);
+		if (!file) return;
 
-			const presignedLink = response.data.url;
-			const fields = response.data.fields;
-
-			const formData = new FormData();
-			Object.entries(fields).forEach(([k, v]) => {
-				formData.append(k, v);
-			});
-			formData.append("file", file);
-
-			fetch(presignedLink, {
-				method: "POST",
-				body: formData,
-			})
-				.then(async () => {
-					await updateProfileApi({
-						id: userId,
-						photo: {
-							originalKey: response.data.fields.key,
-							key: file.name,
-						},
-					});
-
-					updateCurrentUser();
-				})
-				.catch((e) => console.log(e));
-		}
+		handlePhotoUpload(file, FolderType.Profile, userId);
 	};
 
 	const photoSrc = userState.photo?.originalKey ? BUCKET_PATH + userState.photo.originalKey : "/avatar.png";
-	console.log("photoSrc", photoSrc);
+
 	return (
 		<ProfileCardStyled>
 			<PhotoBlock>
