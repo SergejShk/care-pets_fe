@@ -1,10 +1,17 @@
-import { FC } from "react";
-import { useForm } from "react-hook-form";
+import { FC, useRef } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 
 import Input from "../../common/Input";
 import Button from "../../common/Button";
+import Datepicker from "../../common/Datepicker";
 
+import { petSchema } from "../../../validation/pet";
+
+import { convertDateFromString, convertDateToString } from "../../../utils/dateFormatter";
+
+import { TDateValue } from "../../../interface/common";
 import { IFirstStepAddPetFormValues } from "../../../interface/pets";
 import { ButtonTheme } from "../../../interface/styles";
 
@@ -15,9 +22,16 @@ interface IProps {
 }
 
 const FirstStep: FC<IProps> = ({ onClose, setFirstStepValue, setIsFirstStep }) => {
+	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
+
+	const birthdayRef = useRef<HTMLInputElement | null>(null);
+
 	const {
 		register,
+		setValue,
 		handleSubmit,
+		setError,
+		control,
 		formState: { errors },
 	} = useForm<IFirstStepAddPetFormValues>({
 		defaultValues: {
@@ -27,9 +41,51 @@ const FirstStep: FC<IProps> = ({ onClose, setFirstStepValue, setIsFirstStep }) =
 		},
 	});
 
+	const validateBirthday = (value: string) => {
+		const convertedValueToDate = convertDateFromString(value);
+
+		const validatedValue = petSchema.birthday.safeParse(value);
+		const validatedConvertedValueToDate = petSchema.birthday.safeParse(convertedValueToDate);
+
+		if (!validatedValue.success || !validatedConvertedValueToDate.success) {
+			setError("birthday", {
+				type: "valueAsDate",
+				message: "Invalid date",
+			});
+
+			return false;
+		}
+
+		setError("birthday", {});
+		return true;
+	};
+
+	const onManualDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		validateBirthday(value);
+		setValue(`birthday`, value);
+	};
+
+	const onBirthdayChange = (value: TDateValue) => {
+		const birthdayString = convertDateToString(value as Date);
+
+		setError("birthday", {});
+		setValue(`birthday`, birthdayString);
+	};
+
 	const onSubmitForm = (values: IFirstStepAddPetFormValues) => {
+		const isValidBirthday = validateBirthday(values.birthday);
+		if (!isValidBirthday) return;
+
 		setFirstStepValue(values);
 		setIsFirstStep(false);
+	};
+
+	const datePickerInputStyle = {
+		width: isMobile ? "calc(100% - 30px)" : "calc(100% - 66px)",
+		fontSize: isMobile ? 14 : 18,
+		letterSpacing: isMobile ? 0.56 : 0.72,
+		padding: isMobile ? "11px 14px" : "15px 32px 14px",
 	};
 
 	return (
@@ -49,16 +105,25 @@ const FirstStep: FC<IProps> = ({ onClose, setFirstStepValue, setIsFirstStep }) =
 					error={errors.name}
 				/>
 
-				<Input
-					type="text"
+				<Controller
 					name="birthday"
-					label="Date of birth"
-					placeholder="Type date of birth"
-					register={register}
-					rules={{
-						required: { value: true, message: "Required" },
-					}}
-					error={errors.birthday}
+					control={control}
+					rules={{ required: { value: true, message: "Required" } }}
+					render={({ field }) => (
+						<Datepicker
+							inputRef={birthdayRef}
+							id="birthday"
+							value={field.value}
+							handleChange={onBirthdayChange}
+							handleManualInputChange={onManualDateChange}
+							label="Date of birth"
+							placeholder="Type date of birth"
+							hasFocus
+							error={errors.birthday}
+							inputStyle={datePickerInputStyle}
+							positionCalendar={{ left: "0px" }}
+						/>
+					)}
 				/>
 
 				<Input
@@ -72,7 +137,7 @@ const FirstStep: FC<IProps> = ({ onClose, setFirstStepValue, setIsFirstStep }) =
 						minLength: { value: 2, message: "Min length 2 characters" },
 						maxLength: { value: 16, message: "Max length 16 characters" },
 					}}
-					error={errors.birthday}
+					error={errors.breed}
 				/>
 
 				<BtnWrapper>

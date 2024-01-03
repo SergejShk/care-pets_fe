@@ -1,24 +1,38 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { CSSProperties, FC, useEffect, useRef, useState } from "react";
+import { FieldError } from "react-hook-form";
 import Calendar from "react-calendar";
 import styled from "styled-components";
 
 import { TDateValue } from "../../interface/common";
+import { IPosition } from "../../interface/styles";
 
 interface IProps {
 	id?: string;
 	inputRef: React.MutableRefObject<HTMLInputElement | null>;
 	value: string;
+	label?: string;
+	placeholder?: string;
 	disabled?: boolean;
+	hasFocus?: boolean;
+	error?: FieldError;
+	inputStyle?: CSSProperties;
+	positionCalendar?: IPosition;
 	handleManualInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	handleChange: (value: TDateValue) => void;
-	setActiveInputId: (value: React.SetStateAction<string | null>) => void;
+	setActiveInputId?: (value: React.SetStateAction<string | null>) => void;
 }
 
 const Datepicker: FC<IProps> = ({
 	id,
 	inputRef,
 	value,
+	label,
+	placeholder,
 	disabled = false,
+	hasFocus = false,
+	error,
+	inputStyle,
+	positionCalendar,
 	handleManualInputChange,
 	handleChange,
 	setActiveInputId,
@@ -54,28 +68,49 @@ const Datepicker: FC<IProps> = ({
 
 	const handleCalendarChange = (value: TDateValue) => {
 		handleChange(value);
-		setActiveInputId(id || null);
+
+		if (setActiveInputId) {
+			setActiveInputId(id || null);
+		}
 	};
 
+	const handleDatePickerStyledClick = () => {
+		if (setActiveInputId) {
+			setActiveInputId(id || null);
+		}
+	};
+
+	const hasError = !!(error && error.message);
+
 	return (
-		<DatepickerStyled ref={datePickerRef} onClick={() => setActiveInputId(id || null)}>
-			<Input
-				id={id}
-				ref={inputRef}
-				type="text"
-				value={value}
-				onChange={handleManualInputChange}
-				disabled={disabled}
-				autoComplete="false"
-			/>
+		<DatepickerStyled ref={datePickerRef} onClick={handleDatePickerStyledClick}>
+			<Label>
+				{label && label}
+				<Input
+					id={id}
+					ref={inputRef}
+					type="text"
+					value={value}
+					onChange={handleManualInputChange}
+					placeholder={placeholder}
+					disabled={disabled}
+					autoComplete="off"
+					$hasFocus={hasFocus}
+					aria-invalid={hasError ? "true" : "false"}
+					style={inputStyle}
+				/>
+			</Label>
 			{isActive && (
 				<CalendarStyled
 					locale="en-US"
 					onChange={handleCalendarChange}
-					onViewChange={() => setActiveInputId(id || null)}
+					onViewChange={handleDatePickerStyledClick}
 					tileClassName="calendarTile"
+					$positionCalendar={positionCalendar}
 				/>
 			)}
+
+			{hasError && <ErrorText role="alert">{error.message}</ErrorText>}
 		</DatepickerStyled>
 	);
 };
@@ -86,7 +121,18 @@ const DatepickerStyled = styled.div`
 	position: relative;
 `;
 
-const Input = styled.input`
+const Label = styled.label`
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 26.5px;
+	color: ${({ theme }) => theme.textColor.black};
+`;
+
+const Input = styled.input<{ $hasFocus?: boolean }>`
 	width: calc(145px - 26px);
 	display: flex;
 	align-items: center;
@@ -104,16 +150,22 @@ const Input = styled.input`
 		border-color: transparent;
 	}
 
+	&:hover,
+	&:focus {
+		border-color: ${({ theme, $hasFocus }) => $hasFocus && theme.borderColor.primaryAccent};
+	}
+
 	@media screen and (min-width: 768px) {
 		font-size: 18px;
 		width: calc(216px - 24px);
 	}
 `;
 
-const CalendarStyled = styled(Calendar)`
+const CalendarStyled = styled(Calendar)<{ $positionCalendar?: IPosition }>`
 	position: absolute;
 	top: 105%;
 	left: -50px;
+	left: ${({ $positionCalendar }) => $positionCalendar?.left || "-50%"};
 	z-index: 1;
 	background-color: ${({ theme }) => theme.backgroundColor.main};
 	border-radius: 8px;
@@ -169,4 +221,13 @@ const CalendarStyled = styled(Calendar)`
 		background-color: ${({ theme }) => theme.backgroundColor.primary};
 		color: ${({ theme }) => theme.textColor.white};
 	}
+`;
+
+const ErrorText = styled.span`
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: -15px;
+	font-size: 10px;
+	color: ${({ theme }) => theme.textColor.error};
 `;

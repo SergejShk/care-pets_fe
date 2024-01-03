@@ -51,6 +51,7 @@ const InputWrapper = styled.div`
 `;
 
 const Label = styled.label`
+	cursor: pointer;
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
