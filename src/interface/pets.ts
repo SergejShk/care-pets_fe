@@ -1,7 +1,10 @@
-export interface IPet {
+export interface IFirstStepAddPetFormValues {
 	name: string;
-	date: string;
+	birthday: string;
 	breed: string;
+}
+
+export interface IPet extends IFirstStepAddPetFormValues {
 	comments: string;
 	photo?: string;
 }

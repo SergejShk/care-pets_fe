@@ -11,9 +11,16 @@ type IProps = {
 	padding?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const Button: FC<IProps> = ({ children, btntheme = ButtonTheme.White, padding, fontSize, style }) => {
+const Button: FC<IProps> = ({
+	children,
+	btntheme = ButtonTheme.White,
+	padding,
+	fontSize,
+	style,
+	...props
+}) => {
 	return (
-		<ButtonStyled btntheme={btntheme} padding={padding} fontSize={fontSize} style={style}>
+		<ButtonStyled btntheme={btntheme} padding={padding} fontSize={fontSize} style={style} {...props}>
 			{children}
 		</ButtonStyled>
 	);

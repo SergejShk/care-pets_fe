@@ -19,7 +19,7 @@ const PetsCard: FC<IProps> = ({ pet }) => {
 
 			<DescriptionList>
 				<Description>Name: {pet.name}</Description>
-				<Description>Date of birth: {pet.date}</Description>
+				<Description>Date of birth: {pet.birthday}</Description>
 				<Description>Breed: {pet.breed}</Description>
 				<Description>Comments: {pet.comments}</Description>
 				<DeleteBtn>

@@ -4,6 +4,7 @@ import styled from "styled-components";
 type InputProps<TFormValues extends FieldValues> = {
 	name: Path<TFormValues>;
 	type: string;
+	label?: string;
 	placeholder: string;
 	register?: UseFormRegister<TFormValues>;
 	rules?: RegisterOptions;
@@ -13,6 +14,7 @@ type InputProps<TFormValues extends FieldValues> = {
 const Input = <TFormValues extends FieldValues>({
 	name,
 	type,
+	label,
 	placeholder,
 	register,
 	rules,
@@ -22,15 +24,18 @@ const Input = <TFormValues extends FieldValues>({
 
 	return (
 		<InputWrapper>
-			<InputStyled
-				id={name}
-				name={name}
-				type={type}
-				placeholder={placeholder}
-				{...(register && register(name, rules))}
-				aria-invalid={hasError ? "true" : "false"}
-				autoComplete="off"
-			/>
+			<Label>
+				{label && label}
+				<InputStyled
+					id={name}
+					name={name}
+					type={type}
+					placeholder={placeholder}
+					{...(register && register(name, rules))}
+					aria-invalid={hasError ? "true" : "false"}
+					autoComplete="off"
+				/>
+			</Label>
 			{hasError && <ErrorText role="alert">{error.message}</ErrorText>}
 		</InputWrapper>
 	);
@@ -43,6 +48,16 @@ const InputWrapper = styled.div`
 	width: 100%;
 	display: flex;
 	flex-direction: column;
+`;
+
+const Label = styled.label`
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 26.5px;
+	color: ${({ theme }) => theme.textColor.black};
 `;
 
 const InputStyled = styled.input`

@@ -3,19 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
 
-import Modal from "../common/Modal";
-
 import Heading from "./Heading";
 import ProfileCard from "./ProfileCard";
 import PetsCard from "./PetsCard";
 import MobileMenu from "../mobile-menu/MobileMenu";
+import AddPet from "./add-pet/AddPet";
 
 import { useAuthContext } from "../../context/AuthProvider";
 
 const fakePets = [
 	{
 		name: "Jack",
-		date: "22.04.2018",
+		birthday: "22.04.2018",
 		breed: "Scotland",
 		comments:
 			"Comments: Lorem ipsum dolor sit amet, consecteturLorem ipsum dolor sit amet, consectetur  Lorem ipsum dolor sit amet, consectetur Lorem ipsum dolor sit amet, consectetur",
@@ -23,7 +22,7 @@ const fakePets = [
 	},
 	{
 		name: "Leon",
-		date: "15.09.2022",
+		birthday: "15.09.2022",
 		breed: "Buldog",
 		comments:
 			"Comments: Lorem ipsum dolor sit amet, consecteturLorem ipsum dolor sit amet, consectetur  Lorem ipsum dolor sit amet, consectetur Lorem ipsum dolor sit amet, consectetur   Lorem ipsum dolor sit amet, consecteturLorem ipsum dolor sit amet, consectetur  Lorem ipsum dolor sit amet, consectetur Lorem ipsum dolor sit amet, consectetur   Lorem ipsum dolor sit amet, consectetur Lorem ipsum dolor sit amet, consectetur",
@@ -31,7 +30,7 @@ const fakePets = [
 	},
 	{
 		name: "Shvarz",
-		date: "15.11.2023",
+		birthday: "15.11.2023",
 		breed: "Pitbull",
 		comments: "Comments: Lorem ipsum dolor sit amet",
 	},
@@ -96,11 +95,7 @@ const AccountPage: FC = () => {
 				{!isDesktop && <MobileMenu />}
 			</AccountStyled>
 
-			{isOpenAddPetModal && (
-				<Modal onModalClose={handleAddPetModalClose}>
-					<div>Add Pet Modal</div>
-				</Modal>
-			)}
+			{isOpenAddPetModal && <AddPet onClose={handleAddPetModalClose} />}
 		</>
 	);
 };
