@@ -8,15 +8,22 @@ interface IProps {
 	maxWidth?: string;
 	hasAddBtn?: boolean;
 	isMainHeading?: boolean;
+	onAddPetModalOpen: () => void;
 }
 
-const Heading: FC<IProps> = ({ title, maxWidth, hasAddBtn = false, isMainHeading = false }) => {
+const Heading: FC<IProps> = ({
+	title,
+	maxWidth,
+	hasAddBtn = false,
+	isMainHeading = false,
+	onAddPetModalOpen,
+}) => {
 	return (
 		<HeadingStyled $isMainHeading={isMainHeading} $maxWidth={maxWidth}>
 			{title}
 
 			{hasAddBtn && (
-				<AddBtn type="button">
+				<AddBtn type="button" onClick={onAddPetModalOpen}>
 					Add pet
 					<PlusWrapper>
 						<Plus />
@@ -69,6 +76,7 @@ const AddBtn = styled.button`
 	font-weight: 500;
 	line-height: normal;
 	color: ${({ theme }) => theme.textColor.black};
+	outline: none;
 `;
 
 const PlusWrapper = styled.div`

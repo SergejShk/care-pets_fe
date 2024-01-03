@@ -1,7 +1,9 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
+
+import Modal from "../common/Modal";
 
 import Heading from "./Heading";
 import ProfileCard from "./ProfileCard";
@@ -40,6 +42,8 @@ const AccountPage: FC = () => {
 	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 	const navigate = useNavigate();
 
+	const [isOpenAddPetModal, setIsOpenAddPetModal] = useState(false);
+
 	const { auth } = useAuthContext();
 	const isAuth = !!auth.email;
 
@@ -49,31 +53,55 @@ const AccountPage: FC = () => {
 		}
 	}, [isAuth, navigate]);
 
+	const handleAddPetModalOpen = () => setIsOpenAddPetModal(true);
+	const handleAddPetModalClose = () => setIsOpenAddPetModal(false);
+
 	return (
-		<AccountStyled>
-			<HeadingWrapper>
-				<Heading
-					title="My information:"
-					isMainHeading
-					hasAddBtn={!isMobile && !isDesktop}
-					maxWidth={isDesktop ? "426px" : ""}
-				/>
-				{isDesktop && <Heading title="My pets:" hasAddBtn={isMobile || isDesktop} />}
-			</HeadingWrapper>
+		<>
+			<AccountStyled>
+				<HeadingWrapper>
+					<Heading
+						title="My information:"
+						isMainHeading
+						hasAddBtn={!isMobile && !isDesktop}
+						maxWidth={isDesktop ? "426px" : ""}
+						onAddPetModalOpen={handleAddPetModalOpen}
+					/>
+					{isDesktop && (
+						<Heading
+							title="My pets:"
+							hasAddBtn={isMobile || isDesktop}
+							onAddPetModalOpen={handleAddPetModalOpen}
+						/>
+					)}
+				</HeadingWrapper>
 
-			<CardsWrapper>
-				<ProfileCard user={auth} />
-				{!isDesktop && <Heading title="My pets:" hasAddBtn={isMobile || isDesktop} />}
+				<CardsWrapper>
+					<ProfileCard user={auth} />
+					{!isDesktop && (
+						<Heading
+							title="My pets:"
+							hasAddBtn={isMobile || isDesktop}
+							onAddPetModalOpen={handleAddPetModalOpen}
+						/>
+					)}
 
-				<PetsList>
-					{fakePets.map((pet, idx) => (
-						<PetsCard key={idx} pet={pet} />
-					))}
-				</PetsList>
-			</CardsWrapper>
+					<PetsList>
+						{fakePets.map((pet, idx) => (
+							<PetsCard key={idx} pet={pet} />
+						))}
+					</PetsList>
+				</CardsWrapper>
 
-			{!isDesktop && <MobileMenu />}
-		</AccountStyled>
+				{!isDesktop && <MobileMenu />}
+			</AccountStyled>
+
+			{isOpenAddPetModal && (
+				<Modal onModalClose={handleAddPetModalClose}>
+					<div>Add Pet Modal</div>
+				</Modal>
+			)}
+		</>
 	);
 };
 

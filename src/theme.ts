@@ -12,6 +12,7 @@ export const theme = {
 		main: "#FDF7F2",
 		white: "#ffffff",
 		primary: "#F59256",
+		backdrop: "rgba(17, 17, 17, 0.6)",
 	},
 	borderColor: {
 		primary: "#F59256",
