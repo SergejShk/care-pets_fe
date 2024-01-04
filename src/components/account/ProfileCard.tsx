@@ -43,7 +43,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 
 	const { mutate: updateCurrentUser } = useGetMe();
 
-	const { handlePhotoUpload } = usePhotoUpload();
+	const { uploadedPhoto, handlePhotoUpload } = usePhotoUpload();
 
 	const listRef = {
 		name: useRef<HTMLInputElement | null>(null),
@@ -91,6 +91,15 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 			document.body.removeEventListener("click", onInputBlur, true);
 		};
 	}, [onInputBlur]);
+
+	useEffect(() => {
+		if (!uploadedPhoto) return;
+
+		updateProfileApi({
+			id: userId,
+			photo: uploadedPhoto,
+		}).then(() => updateCurrentUser());
+	}, [updateCurrentUser, uploadedPhoto, userId]);
 
 	const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -153,7 +162,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 
 		if (!file) return;
 
-		handlePhotoUpload(file, FolderType.Profile, userId);
+		await handlePhotoUpload(file, FolderType.Profile);
 	};
 
 	const photoSrc = userState.photo?.originalKey ? BUCKET_PATH + userState.photo.originalKey : "/avatar.png";

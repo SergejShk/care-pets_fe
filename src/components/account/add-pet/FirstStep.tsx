@@ -16,12 +16,13 @@ import { IFirstStepAddPetFormValues } from "../../../interface/pets";
 import { ButtonTheme } from "../../../interface/styles";
 
 interface IProps {
+	initialState: IFirstStepAddPetFormValues | null;
 	onClose: () => void;
 	setFirstStepValue: React.Dispatch<React.SetStateAction<IFirstStepAddPetFormValues | null>>;
 	setIsFirstStep: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const FirstStep: FC<IProps> = ({ onClose, setFirstStepValue, setIsFirstStep }) => {
+const FirstStep: FC<IProps> = ({ initialState, onClose, setFirstStepValue, setIsFirstStep }) => {
 	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
 	const birthdayRef = useRef<HTMLInputElement | null>(null);
@@ -35,9 +36,9 @@ const FirstStep: FC<IProps> = ({ onClose, setFirstStepValue, setIsFirstStep }) =
 		formState: { errors },
 	} = useForm<IFirstStepAddPetFormValues>({
 		defaultValues: {
-			name: "",
-			birthday: "",
-			breed: "",
+			name: initialState?.name || "",
+			birthday: initialState?.birthday || "",
+			breed: initialState?.breed || "",
 		},
 	});
 
@@ -89,78 +90,76 @@ const FirstStep: FC<IProps> = ({ onClose, setFirstStepValue, setIsFirstStep }) =
 	};
 
 	return (
-		<>
-			<FormStyled onSubmit={handleSubmit(onSubmitForm)}>
-				<Input
-					type="text"
-					name="name"
-					label="Name pet"
-					placeholder="Type name pet"
-					register={register}
-					rules={{
-						required: { value: true, message: "Required" },
-						minLength: { value: 2, message: "Min length 2 characters" },
-						maxLength: { value: 16, message: "Max length 16 characters" },
-					}}
-					error={errors.name}
-					inputFontSize={isMobile ? "14px" : "16px"}
-				/>
+		<FormStyled onSubmit={handleSubmit(onSubmitForm)}>
+			<Input
+				type="text"
+				name="name"
+				label="Name pet"
+				placeholder="Type name pet"
+				register={register}
+				rules={{
+					required: { value: true, message: "Required" },
+					minLength: { value: 2, message: "Min length 2 characters" },
+					maxLength: { value: 16, message: "Max length 16 characters" },
+				}}
+				error={errors.name}
+				inputFontSize={isMobile ? "14px" : "16px"}
+			/>
 
-				<Controller
-					name="birthday"
-					control={control}
-					rules={{ required: { value: true, message: "Required" } }}
-					render={({ field }) => (
-						<Datepicker
-							inputRef={birthdayRef}
-							id="birthday"
-							value={field.value}
-							handleChange={onBirthdayChange}
-							handleManualInputChange={onManualDateChange}
-							label="Date of birth"
-							placeholder="Type date of birth"
-							hasFocus
-							error={errors.birthday}
-							inputStyle={datePickerInputStyle}
-							positionCalendar={{ left: "0px" }}
-						/>
-					)}
-				/>
+			<Controller
+				name="birthday"
+				control={control}
+				rules={{ required: { value: true, message: "Required" } }}
+				render={({ field }) => (
+					<Datepicker
+						inputRef={birthdayRef}
+						id="birthday"
+						value={field.value}
+						handleChange={onBirthdayChange}
+						handleManualInputChange={onManualDateChange}
+						label="Date of birth"
+						placeholder="Type date of birth"
+						hasFocus
+						error={errors.birthday}
+						inputStyle={datePickerInputStyle}
+						positionCalendar={{ left: "0px" }}
+					/>
+				)}
+			/>
 
-				<Input
-					type="text"
-					name="breed"
-					label="Breed"
-					placeholder="Type breed"
-					register={register}
-					rules={{
-						required: { value: true, message: "Required" },
-						minLength: { value: 2, message: "Min length 2 characters" },
-						maxLength: { value: 16, message: "Max length 16 characters" },
-					}}
-					error={errors.breed}
-					inputFontSize={isMobile ? "14px" : "16px"}
-				/>
+			<Input
+				type="text"
+				name="breed"
+				label="Breed"
+				placeholder="Type breed"
+				register={register}
+				rules={{
+					required: { value: true, message: "Required" },
+					minLength: { value: 2, message: "Min length 2 characters" },
+					maxLength: { value: 16, message: "Max length 16 characters" },
+				}}
+				error={errors.breed}
+				inputFontSize={isMobile ? "14px" : "16px"}
+			/>
 
-				<BtnWrapper>
-					<Button
-						type="submit"
-						btntheme={ButtonTheme.Orange}
-						style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
-					>
-						Next
-					</Button>
-					<Button
-						type="button"
-						btntheme={ButtonTheme.White}
-						onClick={onClose}
-						style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
-					>
-						Cancel
-					</Button>
-				</BtnWrapper>
-			</FormStyled>
-		</>
+			<BtnWrapper>
+				<Button
+					type="submit"
+					btntheme={ButtonTheme.Orange}
+					style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
+				>
+					Next
+				</Button>
+				<Button
+					type="button"
+					btntheme={ButtonTheme.White}
+					onClick={onClose}
+					style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
+				>
+					Cancel
+				</Button>
+			</BtnWrapper>
+		</FormStyled>
 	);
 };
 
@@ -184,7 +183,7 @@ const BtnWrapper = styled.div`
 	margin-top: 12px;
 
 	@media screen and (min-width: 768px) {
-		flex-direction: row;
+		flex-direction: row-reverse;
 		gap: 20px;
 		justify-content: center;
 		margin-top: 22px;

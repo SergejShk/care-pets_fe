@@ -1,3 +1,4 @@
+import { IPhoto } from "./common";
 import { IRegisteredUser } from "./registration";
 
 export enum UpdateUserKeys {
@@ -10,10 +11,7 @@ export enum UpdateUserKeys {
 
 export interface IUser extends IRegisteredUser {
 	birthday?: Date;
-	photo?: {
-		originalKey: string;
-		key: string;
-	};
+	photo?: IPhoto;
 }
 
 export interface IUpdateUser {
@@ -23,10 +21,7 @@ export interface IUpdateUser {
 	city?: string;
 	phone?: string;
 	birthday?: Date;
-	photo?: {
-		originalKey: string;
-		key: string;
-	};
+	photo?: IPhoto;
 }
 
 export interface IProfileState {
@@ -35,10 +30,7 @@ export interface IProfileState {
 	city: string;
 	phone: string;
 	birthday: string;
-	photo?: {
-		originalKey: string;
-		key: string;
-	};
+	photo?: IPhoto;
 }
 
 export interface IErrorProfile {

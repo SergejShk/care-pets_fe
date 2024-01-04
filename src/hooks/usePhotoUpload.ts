@@ -1,14 +1,14 @@
-import { useGetMe } from "../api/mutations/auth/useGetMe";
+import { useState } from "react";
 
 import { createPresignedPostApi } from "../api/services/files/createPresignedPost";
-import { updateProfileApi } from "../api/services/profile/updateProfile";
 
 import { FolderType } from "../interface/files";
+import { IPhoto } from "../interface/common";
 
 export const usePhotoUpload = () => {
-	const { mutate: updateCurrentUser } = useGetMe();
+	const [uploadedPhoto, setUploadedPhoto] = useState<IPhoto | undefined>(undefined);
 
-	const handlePhotoUpload = async (file: File, folderType: FolderType, userId: number) => {
+	const handlePhotoUpload = async (file: File, folderType: FolderType) => {
 		const response = await createPresignedPostApi(
 			{
 				key: file.name,
@@ -31,18 +31,13 @@ export const usePhotoUpload = () => {
 			body: formData,
 		})
 			.then(async () => {
-				await updateProfileApi({
-					id: userId,
-					photo: {
-						originalKey: response.data.fields.key,
-						key: file.name,
-					},
+				setUploadedPhoto({
+					originalKey: response.data.fields.key,
+					key: file.name,
 				});
-
-				updateCurrentUser();
 			})
 			.catch((e) => console.log(e));
 	};
 
-	return { handlePhotoUpload };
+	return { uploadedPhoto, handlePhotoUpload };
 };

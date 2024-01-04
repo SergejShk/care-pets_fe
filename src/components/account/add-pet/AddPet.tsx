@@ -1,10 +1,16 @@
 import { FC, useState } from "react";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
 import Modal from "../../common/Modal";
 import FirstStep from "./FirstStep";
+import SecondStep from "./SecondStep";
 
-import { IFirstStepAddPetFormValues } from "../../../interface/pets";
+import { usePhotoUpload } from "../../../hooks/usePhotoUpload";
+
+import { IFirstStepAddPetFormValues, ISecondStepAddPetFormValues } from "../../../interface/pets";
+
+const BUCKET_PATH = import.meta.env.VITE_BUCKET_PATH;
 
 interface IProps {
 	onClose: () => void;
@@ -14,7 +20,25 @@ const AddPet: FC<IProps> = ({ onClose }) => {
 	const [isFirstStep, setIsFirstStep] = useState(true);
 	const [firstStepValue, setFirstStepValue] = useState<IFirstStepAddPetFormValues | null>(null);
 
-	console.log("firstStepValue", firstStepValue);
+	const { uploadedPhoto, handlePhotoUpload } = usePhotoUpload();
+
+	const {
+		register: registerSecondStep,
+		handleSubmit: handleSubmitSecondStep,
+		formState: { errors: errorsSecondStep },
+	} = useForm<ISecondStepAddPetFormValues>({
+		defaultValues: {
+			comments: "",
+		},
+	});
+
+	const onGoToFirstStep = () => setIsFirstStep(true);
+
+	const handleSubmitForm = ({ comments }: ISecondStepAddPetFormValues) => {
+		console.log({ ...firstStepValue, comments, photo: uploadedPhoto });
+	};
+
+	const photoSrc = uploadedPhoto?.originalKey ? BUCKET_PATH + uploadedPhoto.originalKey : "";
 
 	return (
 		<>
@@ -25,8 +49,20 @@ const AddPet: FC<IProps> = ({ onClose }) => {
 					{isFirstStep && (
 						<FirstStep
 							onClose={onClose}
+							initialState={firstStepValue}
 							setFirstStepValue={setFirstStepValue}
 							setIsFirstStep={setIsFirstStep}
+						/>
+					)}
+
+					{!isFirstStep && firstStepValue && (
+						<SecondStep
+							photoSrc={photoSrc}
+							errors={errorsSecondStep}
+							register={registerSecondStep}
+							onGoToFirstStep={onGoToFirstStep}
+							onPhotoUpload={handlePhotoUpload}
+							onSubmitForm={handleSubmitSecondStep(handleSubmitForm)}
 						/>
 					)}
 				</AddPetStyled>

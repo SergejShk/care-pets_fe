@@ -1,10 +1,15 @@
+import { IPhoto } from "./common";
+
 export interface IFirstStepAddPetFormValues {
 	name: string;
 	birthday: string;
 	breed: string;
 }
 
-export interface IPet extends IFirstStepAddPetFormValues {
+export interface ISecondStepAddPetFormValues {
 	comments: string;
-	photo?: string;
+}
+
+export interface IPet extends IFirstStepAddPetFormValues, ISecondStepAddPetFormValues {
+	photo?: IPhoto;
 }
