@@ -130,6 +130,11 @@ const Label = styled.label`
 	font-weight: 500;
 	line-height: 26.5px;
 	color: ${({ theme }) => theme.textColor.black};
+
+	@media screen and (min-width: 768px) {
+		font-size: 24px;
+		gap: 12px;
+	}
 `;
 
 const Input = styled.input<{ $hasFocus?: boolean }>`

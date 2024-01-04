@@ -38,13 +38,15 @@ const Modal: FC<IProps> = ({ children, onModalClose }) => {
 
 	return (
 		<Backdrop onClick={onBackdropClick}>
-			<ModalStyled>
-				<CloseBtn type="button" onClick={onModalClose}>
-					<CloseIcon />
-				</CloseBtn>
+			<ModalWrapper onClick={onBackdropClick}>
+				<ModalStyled>
+					<CloseBtn type="button" onClick={onModalClose}>
+						<CloseIcon />
+					</CloseBtn>
 
-				{children}
-			</ModalStyled>
+					{children}
+				</ModalStyled>
+			</ModalWrapper>
 		</Backdrop>
 	);
 };
@@ -63,21 +65,26 @@ const Backdrop = styled.div`
 	background-color: ${({ theme }) => theme.backgroundColor.backdrop};
 	backdrop-filter: blur(10px);
 	z-index: 100;
+	overflow: auto;
 `;
 
-const ModalStyled = styled.div`
+const ModalWrapper = styled.div`
 	position: absolute;
-	top: 50%;
+	top: 50px;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%);
 	min-width: 280px;
 	min-height: 100px;
-	background-color: ${({ theme }) => theme.backgroundColor.white};
-	border-radius: 20px;
+	padding-bottom: 50px;
 
 	@media screen and (min-width: 768px) {
 		min-width: 608px;
 	}
+`;
+
+const ModalStyled = styled.div`
+	background-color: ${({ theme }) => theme.backgroundColor.white};
+	border-radius: 20px;
 `;
 
 const CloseBtn = styled.button`

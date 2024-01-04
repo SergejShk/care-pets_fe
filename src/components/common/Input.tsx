@@ -9,6 +9,7 @@ type InputProps<TFormValues extends FieldValues> = {
 	register?: UseFormRegister<TFormValues>;
 	rules?: RegisterOptions;
 	error?: FieldError;
+	inputFontSize?: string;
 };
 
 const Input = <TFormValues extends FieldValues>({
@@ -19,6 +20,7 @@ const Input = <TFormValues extends FieldValues>({
 	register,
 	rules,
 	error,
+	inputFontSize,
 }: InputProps<TFormValues>) => {
 	const hasError = !!(error && error.message);
 
@@ -34,6 +36,7 @@ const Input = <TFormValues extends FieldValues>({
 					{...(register && register(name, rules))}
 					aria-invalid={hasError ? "true" : "false"}
 					autoComplete="off"
+					$inputFontSize={inputFontSize}
 				/>
 			</Label>
 			{hasError && <ErrorText role="alert">{error.message}</ErrorText>}
@@ -59,13 +62,18 @@ const Label = styled.label`
 	font-weight: 500;
 	line-height: 26.5px;
 	color: ${({ theme }) => theme.textColor.black};
+
+	@media screen and (min-width: 768px) {
+		font-size: 24px;
+		gap: 12px;
+	}
 `;
 
-const InputStyled = styled.input`
+const InputStyled = styled.input<{ $inputFontSize?: string }>`
 	border-radius: 40px;
 	border: ${({ theme }) => `1px solid ${theme.borderColor.input}`};
 	background-color: ${({ theme }) => theme.backgroundColor.main};
-	font-size: 14px;
+	font-size: ${({ $inputFontSize }) => $inputFontSize || "14px"};
 	line-height: normal;
 	letter-spacing: 0.56px;
 	color: ${({ theme }) => theme.textColor.black};
@@ -73,7 +81,7 @@ const InputStyled = styled.input`
 	padding: 11px 14px;
 
 	@media screen and (min-width: 768px) {
-		font-size: 18px;
+		font-size: ${({ $inputFontSize }) => $inputFontSize || "18px"};
 		padding: 15px 32px 14px;
 		letter-spacing: 0.72px;
 	}

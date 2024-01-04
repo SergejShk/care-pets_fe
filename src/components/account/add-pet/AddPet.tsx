@@ -50,4 +50,8 @@ const Title = styled.h3`
 	font-weight: 500;
 	color: ${({ theme }) => theme.textColor.black};
 	text-align: center;
+
+	@media screen and (min-width: 768px) {
+		font-size: 36px;
+	}
 `;

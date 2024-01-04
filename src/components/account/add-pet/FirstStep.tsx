@@ -83,7 +83,7 @@ const FirstStep: FC<IProps> = ({ onClose, setFirstStepValue, setIsFirstStep }) =
 
 	const datePickerInputStyle = {
 		width: isMobile ? "calc(100% - 30px)" : "calc(100% - 66px)",
-		fontSize: isMobile ? 14 : 18,
+		fontSize: isMobile ? 14 : 16,
 		letterSpacing: isMobile ? 0.56 : 0.72,
 		padding: isMobile ? "11px 14px" : "15px 32px 14px",
 	};
@@ -103,6 +103,7 @@ const FirstStep: FC<IProps> = ({ onClose, setFirstStepValue, setIsFirstStep }) =
 						maxLength: { value: 16, message: "Max length 16 characters" },
 					}}
 					error={errors.name}
+					inputFontSize={isMobile ? "14px" : "16px"}
 				/>
 
 				<Controller
@@ -138,13 +139,23 @@ const FirstStep: FC<IProps> = ({ onClose, setFirstStepValue, setIsFirstStep }) =
 						maxLength: { value: 16, message: "Max length 16 characters" },
 					}}
 					error={errors.breed}
+					inputFontSize={isMobile ? "14px" : "16px"}
 				/>
 
 				<BtnWrapper>
-					<Button type="submit" btntheme={ButtonTheme.Orange}>
+					<Button
+						type="submit"
+						btntheme={ButtonTheme.Orange}
+						style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
+					>
 						Next
 					</Button>
-					<Button type="button" btntheme={ButtonTheme.White} onClick={onClose}>
+					<Button
+						type="button"
+						btntheme={ButtonTheme.White}
+						onClick={onClose}
+						style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
+					>
 						Cancel
 					</Button>
 				</BtnWrapper>
@@ -171,4 +182,11 @@ const BtnWrapper = styled.div`
 	flex-direction: column;
 	gap: 12px;
 	margin-top: 12px;
+
+	@media screen and (min-width: 768px) {
+		flex-direction: row;
+		gap: 20px;
+		justify-content: center;
+		margin-top: 22px;
+	}
 `;
