@@ -38,7 +38,7 @@ const Header = () => {
 				{!isMobile && !isAuth && <SignInNav />}
 				{!isMobile && isAuth && (
 					<Link to="/account">
-						<Button type="button" btntheme={ButtonTheme.Orange}>
+						<Button type="button" btnTheme={ButtonTheme.Orange}>
 							<Person />
 							Account
 						</Button>

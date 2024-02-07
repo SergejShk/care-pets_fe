@@ -90,7 +90,7 @@ const SecondStepRegistration: FC<IProps> = ({ firstStepValues }) => {
 				error={errors.phone}
 			/>
 
-			<Button btntheme={ButtonTheme.Orange} style={{ marginTop: "24px" }} disabled={isPending}>
+			<Button btnTheme={ButtonTheme.Orange} style={{ marginTop: "24px" }} disabled={isPending}>
 				Register
 				{!!error && <ErrorMessage message={error.message} />}
 			</Button>

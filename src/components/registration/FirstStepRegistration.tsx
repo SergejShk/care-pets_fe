@@ -81,7 +81,7 @@ const FirstStepRegistration: FC<IProps> = ({ setDataFirstStep }) => {
 				error={errors.confirmPassword}
 			/>
 
-			<Button btntheme={ButtonTheme.Orange} style={{ marginTop: "24px" }}>
+			<Button btnTheme={ButtonTheme.Orange} style={{ marginTop: "24px" }}>
 				Next
 			</Button>
 		</FormStyled>

@@ -30,7 +30,7 @@ const MobileMenu = () => {
 			{isMobile && !isAuth && <SignInNav />}
 			{isMobile && isAuth && (
 				<Link to="/account" onClick={onAccountClick}>
-					<Button type="button" btntheme={ButtonTheme.Orange}>
+					<Button type="button" btnTheme={ButtonTheme.Orange}>
 						<Person />
 						Account
 					</Button>

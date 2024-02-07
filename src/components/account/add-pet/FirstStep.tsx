@@ -145,14 +145,14 @@ const FirstStep: FC<IProps> = ({ initialState, onClose, setFirstStepValue, setIs
 			<BtnWrapper>
 				<Button
 					type="submit"
-					btntheme={ButtonTheme.Orange}
+					btnTheme={ButtonTheme.Orange}
 					style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
 				>
 					Next
 				</Button>
 				<Button
 					type="button"
-					btntheme={ButtonTheme.White}
+					btnTheme={ButtonTheme.White}
 					onClick={onClose}
 					style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
 				>

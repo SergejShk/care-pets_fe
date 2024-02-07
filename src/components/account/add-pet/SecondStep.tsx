@@ -81,14 +81,14 @@ const SecondStep: FC<IProps> = ({
 				<BtnWrapper>
 					<Button
 						type="submit"
-						btntheme={ButtonTheme.Orange}
+						btnTheme={ButtonTheme.Orange}
 						style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
 					>
 						Done
 					</Button>
 					<Button
 						type="button"
-						btntheme={ButtonTheme.White}
+						btnTheme={ButtonTheme.White}
 						onClick={onGoToFirstStep}
 						style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
 					>

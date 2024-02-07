@@ -6,21 +6,21 @@ import { ButtonTheme } from "../../interface/styles";
 type IProps = {
 	children: ReactNode;
 	style?: CSSProperties;
-	btntheme?: ButtonTheme;
+	btnTheme?: ButtonTheme;
 	fontSize?: string;
 	padding?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button: FC<IProps> = ({
 	children,
-	btntheme = ButtonTheme.White,
+	btnTheme = ButtonTheme.White,
 	padding,
 	fontSize,
 	style,
 	...props
 }) => {
 	return (
-		<ButtonStyled btntheme={btntheme} padding={padding} fontSize={fontSize} style={style} {...props}>
+		<ButtonStyled $btnTheme={btnTheme} padding={padding} fontSize={fontSize} style={style} {...props}>
 			{children}
 		</ButtonStyled>
 	);
@@ -28,7 +28,7 @@ const Button: FC<IProps> = ({
 
 export default Button;
 
-const ButtonStyled = styled.button<{ btntheme: ButtonTheme; padding?: string; fontSize?: string }>`
+const ButtonStyled = styled.button<{ $btnTheme: ButtonTheme; padding?: string; fontSize?: string }>`
 	position: relative;
 	cursor: pointer;
 	display: flex;
@@ -42,10 +42,10 @@ const ButtonStyled = styled.button<{ btntheme: ButtonTheme; padding?: string; fo
 	border-radius: 40px;
 	border: ${({ theme }) => `2px solid ${theme.borderColor.primary}`};
 	padding: ${({ padding }) => padding || "10px 28px"};
-	color: ${({ theme, btntheme }) =>
-		btntheme === ButtonTheme.Orange ? theme.backgroundColor.white : theme.backgroundColor.black};
-	background-color: ${({ theme, btntheme }) =>
-		btntheme === ButtonTheme.Orange ? theme.backgroundColor.primary : theme.backgroundColor.white};
+	color: ${({ theme, $btnTheme }) =>
+		$btnTheme === ButtonTheme.Orange ? theme.backgroundColor.white : theme.backgroundColor.black};
+	background-color: ${({ theme, $btnTheme }) =>
+		$btnTheme === ButtonTheme.Orange ? theme.backgroundColor.primary : theme.backgroundColor.white};
 
 	&:hover {
 		border-color: ${({ theme }) => theme.borderColor.primaryAccent};

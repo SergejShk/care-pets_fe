@@ -78,9 +78,9 @@ const LoginPage: FC = () => {
 						error={errors.password}
 					/>
 
-					<Button btntheme={ButtonTheme.Orange} style={{ marginTop: "24px" }} disabled={isPending}>
+					<Button btnTheme={ButtonTheme.Orange} style={{ marginTop: "24px" }} disabled={isPending}>
 						Login
-						{!!error && <ErrorMessage message={error.message} />}
+						{!!error && !!error.response && <ErrorMessage message={error?.response?.data} />}
 					</Button>
 				</FormStyled>
 
