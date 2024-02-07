@@ -1,10 +1,12 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
 import Modal from "../../common/Modal";
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
+
+import { useCreatePet } from "../../../api/mutations/pets/useCreatePet";
 
 import { usePhotoUpload } from "../../../hooks/usePhotoUpload";
 
@@ -20,6 +22,7 @@ const AddPet: FC<IProps> = ({ onClose }) => {
 	const [isFirstStep, setIsFirstStep] = useState(true);
 	const [firstStepValue, setFirstStepValue] = useState<IFirstStepAddPetFormValues | null>(null);
 
+	const { data: newPetData, isPending, mutate: createNewPet } = useCreatePet();
 	const { uploadedPhoto, handlePhotoUpload } = usePhotoUpload();
 
 	const {
@@ -35,8 +38,17 @@ const AddPet: FC<IProps> = ({ onClose }) => {
 	const onGoToFirstStep = () => setIsFirstStep(true);
 
 	const handleSubmitForm = ({ comments }: ISecondStepAddPetFormValues) => {
-		console.log({ ...firstStepValue, comments, photo: uploadedPhoto });
+		if (!firstStepValue) return;
+		const birthday = new Date(firstStepValue.birthday);
+
+		createNewPet({ body: { ...firstStepValue, birthday, comments, photo: uploadedPhoto } });
 	};
+
+	useEffect(() => {
+		if (!newPetData) return;
+
+		onClose();
+	}, [newPetData, onClose]);
 
 	const photoSrc = uploadedPhoto?.originalKey ? BUCKET_PATH + uploadedPhoto.originalKey : "";
 
@@ -58,6 +70,7 @@ const AddPet: FC<IProps> = ({ onClose }) => {
 					{!isFirstStep && firstStepValue && (
 						<SecondStep
 							photoSrc={photoSrc}
+							isLoading={isPending}
 							errors={errorsSecondStep}
 							register={registerSecondStep}
 							onGoToFirstStep={onGoToFirstStep}

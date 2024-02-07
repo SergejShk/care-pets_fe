@@ -11,5 +11,13 @@ export interface ISecondStepAddPetFormValues {
 }
 
 export interface IPet extends IFirstStepAddPetFormValues, ISecondStepAddPetFormValues {
-	photo?: IPhoto;
+	photo?: IPhoto | null;
+}
+
+export interface IPetApi {
+	name: string;
+	birthday: Date;
+	breed: string;
+	comments: string;
+	photo?: IPhoto | null;
 }

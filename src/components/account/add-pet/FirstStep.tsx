@@ -9,7 +9,11 @@ import Datepicker from "../../common/Datepicker";
 
 import { petSchema } from "../../../validation/pet";
 
-import { convertDateFromString, convertDateToString } from "../../../utils/dateFormatter";
+import {
+	convertDateFromString,
+	convertDateToInputString,
+	convertDateToString,
+} from "../../../utils/dateFormatter";
 
 import { TDateValue } from "../../../interface/common";
 import { IFirstStepAddPetFormValues } from "../../../interface/pets";
@@ -114,7 +118,7 @@ const FirstStep: FC<IProps> = ({ initialState, onClose, setFirstStepValue, setIs
 					<Datepicker
 						inputRef={birthdayRef}
 						id="birthday"
-						value={field.value}
+						value={convertDateToInputString(field.value)}
 						handleChange={onBirthdayChange}
 						handleManualInputChange={onManualDateChange}
 						label="Date of birth"

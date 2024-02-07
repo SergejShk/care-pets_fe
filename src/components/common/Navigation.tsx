@@ -3,10 +3,15 @@ import styled from "styled-components";
 
 import { useModalContext } from "../../context/ModalProvider";
 
-const navItems = [
-	{ name: "News", to: "/news" },
-	{ name: "Find pet", to: "/find-pet" },
-	{ name: "Our friend", to: "/our-friend" },
+interface INavItem {
+	name: string;
+	to: string;
+}
+
+const navItems: INavItem[] = [
+	// { name: "News", to: "/news" },
+	// { name: "Find pet", to: "/find-pet" },
+	// { name: "Our friend", to: "/our-friend" },
 ];
 
 const Navigation = () => {
@@ -18,11 +23,12 @@ const Navigation = () => {
 
 	return (
 		<NavigationStyled>
-			{navItems.map((item) => (
-				<li key={item.to} onClick={onLinkClick}>
-					<NavLinkStyled to={item.to}>{item.name}</NavLinkStyled>
-				</li>
-			))}
+			{!!navItems.length &&
+				navItems.map((item) => (
+					<li key={item.to} onClick={onLinkClick}>
+						<NavLinkStyled to={item.to}>{item.name}</NavLinkStyled>
+					</li>
+				))}
 		</NavigationStyled>
 	);
 };

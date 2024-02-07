@@ -6,7 +6,7 @@ import Logo from "./Logo";
 import SignInNav from "../common/SignInNav";
 import Navigation from "../common/Navigation";
 import Button from "../common/Button";
-import Burger from "../common/icons/Burger";
+// import Burger from "../common/icons/Burger";
 import Person from "../common/icons/Person";
 
 import { useModalContext } from "../../context/ModalProvider";
@@ -45,9 +45,7 @@ const Header = () => {
 					</Link>
 				)}
 
-				<BurgerWrapper onClick={onBurgerClick}>
-					<Burger />
-				</BurgerWrapper>
+				<BurgerWrapper onClick={onBurgerClick}>{/* <Burger /> */}</BurgerWrapper>
 			</MenuWrapper>
 		</HeaderStyled>
 	);

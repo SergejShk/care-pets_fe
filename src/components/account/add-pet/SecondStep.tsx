@@ -12,6 +12,7 @@ import { ButtonTheme } from "../../../interface/styles";
 
 interface IProps {
 	photoSrc: string;
+	isLoading?: boolean;
 	errors: FieldErrors<ISecondStepAddPetFormValues>;
 	register: UseFormRegister<ISecondStepAddPetFormValues>;
 	onGoToFirstStep: () => void;
@@ -21,6 +22,7 @@ interface IProps {
 
 const SecondStep: FC<IProps> = ({
 	photoSrc,
+	isLoading = false,
 	errors,
 	register,
 	onGoToFirstStep,
@@ -83,6 +85,7 @@ const SecondStep: FC<IProps> = ({
 						type="submit"
 						btnTheme={ButtonTheme.Orange}
 						style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
+						disabled={isLoading}
 					>
 						Done
 					</Button>
@@ -91,6 +94,7 @@ const SecondStep: FC<IProps> = ({
 						btnTheme={ButtonTheme.White}
 						onClick={onGoToFirstStep}
 						style={{ minWidth: isMobile ? "" : 180, padding: isMobile ? "10px 28px" : "9px 28px" }}
+						disabled={isLoading}
 					>
 						Back
 					</Button>
@@ -135,6 +139,7 @@ const LabelPhoto = styled.label`
 `;
 
 const PhotoWrapper = styled.div`
+	cursor: pointer;
 	display: flex;
 	justify-content: center;
 	align-items: center;

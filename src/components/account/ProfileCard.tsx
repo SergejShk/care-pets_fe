@@ -13,7 +13,11 @@ import { profileShema } from "../../validation/profile";
 
 import { usePhotoUpload } from "../../hooks/usePhotoUpload";
 
-import { convertDateFromString, convertDateToString } from "../../utils/dateFormatter";
+import {
+	convertDateFromString,
+	convertDateToInputString,
+	convertDateToString,
+} from "../../utils/dateFormatter";
 
 import { TDateValue } from "../../interface/common";
 import { IErrorProfile, IProfileState, IUser, UpdateUserKeys } from "../../interface/user";
@@ -229,7 +233,7 @@ const ProfileCard: FC<IProps> = ({ user }) => {
 							<Datepicker
 								id="birthday"
 								inputRef={listRef.birthday}
-								value={userState.birthday}
+								value={convertDateToInputString(userState.birthday)}
 								handleManualInputChange={onManualDateChange}
 								handleChange={onBirthdayChange}
 								setActiveInputId={setActiveInputId}
