@@ -6,45 +6,28 @@ import styled from "styled-components";
 import Heading from "./Heading";
 import ProfileCard from "./ProfileCard";
 import PetsCard from "./PetsCard";
-import MobileMenu from "../mobile-menu/MobileMenu";
 import AddPet from "./add-pet/AddPet";
+import MobileMenu from "../mobile-menu/MobileMenu";
 
 import { useAuthContext } from "../../context/AuthProvider";
 
-const fakePets = [
-	{
-		name: "Jack",
-		birthday: "22.04.2018",
-		breed: "Scotland",
-		comments:
-			"Comments: Lorem ipsum dolor sit amet, consecteturLorem ipsum dolor sit amet, consectetur  Lorem ipsum dolor sit amet, consectetur Lorem ipsum dolor sit amet, consectetur",
-		photo: "/cat.jpg",
-	},
-	{
-		name: "Leon",
-		birthday: "15.09.2022",
-		breed: "Buldog",
-		comments:
-			"Comments: Lorem ipsum dolor sit amet, consecteturLorem ipsum dolor sit amet, consectetur  Lorem ipsum dolor sit amet, consectetur Lorem ipsum dolor sit amet, consectetur   Lorem ipsum dolor sit amet, consecteturLorem ipsum dolor sit amet, consectetur  Lorem ipsum dolor sit amet, consectetur Lorem ipsum dolor sit amet, consectetur   Lorem ipsum dolor sit amet, consectetur Lorem ipsum dolor sit amet, consectetur",
-		photo: "/dog.jpg",
-	},
-	{
-		name: "Shvarz",
-		birthday: "15.11.2023",
-		breed: "Pitbull",
-		comments: "Comments: Lorem ipsum dolor sit amet",
-	},
-];
+import { useGetUserPets } from "../../api/mutations/pets/useGetUserPets";
 
 const AccountPage: FC = () => {
 	const isDesktop = useMediaQuery({ query: "(min-width: 1280px)" });
 	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 	const navigate = useNavigate();
 
+	const { data: userPets, mutate: getUserPets } = useGetUserPets();
+
 	const [isOpenAddPetModal, setIsOpenAddPetModal] = useState(false);
 
 	const { auth } = useAuthContext();
 	const isAuth = !!auth.email;
+
+	useEffect(() => {
+		getUserPets();
+	}, [getUserPets]);
 
 	useEffect(() => {
 		if (!isAuth) {
@@ -53,7 +36,10 @@ const AccountPage: FC = () => {
 	}, [isAuth, navigate]);
 
 	const handleAddPetModalOpen = () => setIsOpenAddPetModal(true);
-	const handleAddPetModalClose = () => setIsOpenAddPetModal(false);
+	const handleAddPetModalClose = () => {
+		getUserPets();
+		setIsOpenAddPetModal(false);
+	};
 
 	return (
 		<>
@@ -86,7 +72,7 @@ const AccountPage: FC = () => {
 					)}
 
 					<PetsList>
-						{fakePets.map((pet, idx) => (
+						{userPets?.data.map((pet, idx) => (
 							<PetsCard key={idx} pet={pet} />
 						))}
 					</PetsList>

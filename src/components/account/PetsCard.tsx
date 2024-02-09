@@ -4,22 +4,30 @@ import styled from "styled-components";
 
 import Trash from "../common/icons/Trash";
 
-import { IPet } from "../../interface/pets";
+import { convertDateToInputString, convertDateToString } from "../../utils/dateFormatter";
+
+import { IPetApi } from "../../interface/pets";
+
+const BUCKET_PATH = import.meta.env.VITE_BUCKET_PATH;
 
 interface IProps {
-	pet: IPet;
+	pet: IPetApi;
 }
 
 const PetsCard: FC<IProps> = ({ pet }) => {
 	const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
+	const photoSrc = pet?.photo?.originalKey ? BUCKET_PATH + pet?.photo?.originalKey : "";
+	const birthday = convertDateToString(new Date(pet.birthday));
+	const normalizedBirthday = convertDateToInputString(birthday);
+
 	return (
 		<PetsCardStyled>
-			<Avatar src={pet?.photo || "/pet-avatar.png"} alt="pet avatar" />
+			<Avatar src={photoSrc || "/pet-avatar.png"} alt="pet avatar" />
 
 			<DescriptionList>
 				<Description>Name: {pet.name}</Description>
-				<Description>Date of birth: {pet.birthday}</Description>
+				<Description>Date of birth: {normalizedBirthday}</Description>
 				<Description>Breed: {pet.breed}</Description>
 				<Description>Comments: {pet.comments}</Description>
 				<DeleteBtn>
